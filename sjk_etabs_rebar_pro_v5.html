@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SJK-ETABSRebarPro v2.2</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:#F5F8FE;color:#1A2B4A;font-family:'Segoe UI',Arial,sans-serif;display:flex;flex-direction:column;font-size:13px}
+:root{--b1:#1958A5;--b3:#E8F0FB;--b4:#C8DBF5;--b5:#F0F6FF;--g1:#F5F8FE;--g2:#EEF3FB;--g3:#6B82A0;--g4:#94A8C0;--dark:#1A2B4A;--red:#DC2626;--green:#16A34A;--amber:#D97706}
+#hdr{background:#fff;border-bottom:1px solid var(--b4);padding:0 20px;display:flex;align-items:center;gap:10px;height:52px;flex-shrink:0}
+#hdr img{height:34px;object-fit:contain}
+.hdiv{border-left:1px solid var(--b4);height:28px}
+#ht{font-size:13px;font-weight:700}#hs{font-size:10px;color:var(--g3)}
+#hu{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--g3)}
+.badge{padding:2px 9px;border-radius:20px;background:var(--b3);color:var(--b1);font-size:11px;font-weight:700}
+#main{display:flex;flex:1;overflow:hidden}
+#side{width:190px;background:#fff;border-right:1px solid var(--b4);padding:14px 0;flex-shrink:0;overflow-y:auto}
+#body{flex:1;padding:20px 28px;overflow-y:auto}
+.sg{padding:0 14px 6px;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--g4);text-transform:uppercase}
+.sdiv{border-top:1px solid var(--g2);margin:8px 0 6px}
+.tb{width:100%;padding:7px 14px;border:none;background:transparent;color:var(--g3);text-align:left;cursor:pointer;font-size:12px;border-left:3px solid transparent;transition:all .12s;display:flex;align-items:center;gap:7px}
+.tb.active{background:var(--b3);color:var(--b1);font-weight:700;border-left:3px solid var(--b1)}
+.tb.locked{color:var(--g4);cursor:not-allowed}.lk{margin-left:auto;font-size:10px}
+.card{background:#fff;border:1px solid var(--b4);border-radius:10px;padding:16px 20px;margin-bottom:14px}
+.ct{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--b1);margin-bottom:12px}
+.fw{margin-bottom:12px}.fw label{display:block;font-size:11px;color:var(--g3);margin-bottom:3px;font-weight:500}
+input[type=text],input[type=password],input[type=number],select{width:100%;padding:7px 10px;border-radius:7px;border:1px solid var(--b4);background:#fff;color:var(--dark);font-size:13px;outline:none;font-family:inherit}
+input:focus,select:focus{border-color:var(--b1)}
+input[readonly]{color:var(--g3);background:var(--g1)}
+.bp{padding:9px 18px;border-radius:7px;border:none;background:var(--b1);color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+.bp:hover{background:#1348a0}.bp.dis,.bp:disabled{opacity:.4;cursor:not-allowed}
+.bs{padding:8px 14px;border-radius:7px;border:1px solid var(--b4);background:#fff;color:var(--b1);font-size:12px;cursor:pointer}
+.bg{padding:9px 18px;border-radius:7px;border:none;background:#15803D;color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+.br{padding:8px 14px;border-radius:7px;border:1px solid #FECACA;background:#FEF2F2;color:var(--red);font-size:12px;cursor:pointer}
+.info{padding:9px 12px;border-radius:7px;font-size:12px;margin-bottom:9px}
+.ib{background:var(--b5);border:1px solid var(--b4);color:var(--b1)}
+.ig{background:#F0FDF4;border:1px solid #BBF7D0;color:var(--green)}
+.ir{background:#FEF2F2;border:1px solid #FECACA;color:var(--red)}
+.iy{background:#FFFBEB;border:1px solid #FDE68A;color:var(--amber)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.drop{border:2px dashed var(--b4);border-radius:10px;padding:22px 16px;text-align:center;cursor:pointer;background:var(--g1);transition:all .15s}
+.drop:hover,.drop.hov{border-color:var(--b1);background:var(--b5)}
+.drop .di{font-size:26px;margin-bottom:4px}
+.ztag{padding:2px 8px;border-radius:5px;background:var(--b3);border:1px solid var(--b4);font-size:11px;font-family:monospace;color:var(--b1)}
+.tp{display:none}.tp.active{display:block}
+h2{font-size:17px;font-weight:700;color:var(--dark);margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{padding:7px 8px;background:var(--b3);color:var(--b1);font-weight:700;font-size:10px;text-align:left;border-bottom:1px solid var(--b4)}
+td{padding:6px 8px;border-bottom:1px solid var(--g2)}
+tr:nth-child(even) td{background:var(--g1)}
+.mono{font-family:monospace;font-size:11px}
+.fp{padding:2px 7px;border-radius:20px;background:#DCFCE7;color:#15803D;font-size:10px;font-weight:700}
+.ff{padding:2px 7px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-size:10px;font-weight:700}
+.pgbar{height:6px;border-radius:3px;background:var(--b4);margin:8px 0;overflow:hidden}
+.pgfill{height:100%;background:var(--b1);transition:width .3s;border-radius:3px}
+.rbtn{padding:10px 8px;border-radius:9px;border:2px solid var(--g2);background:#fff;color:var(--g3);font-size:11px;font-weight:600;cursor:pointer;text-align:center}
+.rbtn.active{border-color:var(--b1);background:var(--b3);color:var(--b1)}
+.stbox{border-radius:7px;padding:8px 10px;border:1px solid var(--b4);background:var(--b5)}
+.stk{font-size:10px;color:var(--g3)}.stv{font-size:14px;font-weight:700;color:var(--b1)}
+.nw{display:flex;gap:7px;align-items:center}.nw input{width:80px}.nw span{font-size:11px;color:var(--g3)}
+.frow{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--g1);border-radius:7px;border:1px solid var(--g2);margin-bottom:6px}
+.zone-chip{display:inline-block;padding:3px 10px;border-radius:20px;background:var(--b3);border:1px solid var(--b4);font-size:11px;font-family:monospace;color:var(--b1);margin:2px}
+.filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.filter-bar label{font-size:11px;color:var(--g3);font-weight:600}
+.filter-bar select,.filter-bar input[type=text]{width:auto;min-width:100px;padding:5px 8px;font-size:12px}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:14px;padding:24px 28px;width:400px;max-width:95vw}
+.modal h3{font-size:15px;font-weight:700;margin-bottom:14px}
+.eng-row{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--g1);border-radius:8px;border:1px solid var(--g2);margin-bottom:6px}
+.eng-av{width:32px;height:32px;border-radius:50%;background:var(--b3);color:var(--b1);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.eng-info{flex:1}.eng-name{font-size:12px;font-weight:600}.eng-sub{font-size:10px;color:var(--g3)}
+.eng-role{font-size:10px;color:var(--b1);background:var(--b3);padding:2px 7px;border-radius:20px}
+/* Result table group header */
+.gh td{background:var(--b3)!important;font-weight:700;color:var(--b1);font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+</style>
+</head>
+<body>
+
+<!-- MODALS -->
+<div class="modal-bg" id="modal-setpw">
+  <div class="modal"><h3 id="msp-title">🔑 Set Password</h3>
+    <div id="msp-info" class="info ib" style="margin-bottom:10px"></div>
+    <div class="fw"><label>Password Baru</label><input type="password" id="msp-pw1" placeholder="Min 8 karakter"/></div>
+    <div class="fw"><label>Konfirmasi</label><input type="password" id="msp-pw2"/></div>
+    <div id="msp-err" class="info ir" style="display:none"></div>
+    <div style="display:flex;gap:8px"><button class="bp" style="flex:1" onclick="confirmSetPw()">Simpan</button><button class="bs" onclick="closeModal('modal-setpw')">Batal</button></div>
+  </div>
+</div>
+<div class="modal-bg" id="modal-eng">
+  <div class="modal"><h3 id="me-title">👤 Engineer</h3>
+    <input type="hidden" id="me-idx" value="-1"/>
+    <div class="fw"><label>Nama</label><input type="text" id="me-name"/></div>
+    <div class="fw"><label>Jabatan</label><select id="me-role"><option>Senior Engineer</option><option>Junior Engineer</option></select></div>
+    <div class="fw"><label>Username</label><input type="text" id="me-user"/></div>
+    <div class="fw" id="me-pw-wrap"><label>Password</label><input type="password" id="me-pw" placeholder="Min 8 karakter"/></div>
+    <div id="me-err" class="info ir" style="display:none"></div>
+    <div style="display:flex;gap:8px"><button class="bp" style="flex:1" onclick="saveEng()">Simpan</button><button class="bs" onclick="closeModal('modal-eng')">Batal</button></div>
+  </div>
+</div>
+<div class="modal-bg" id="modal-rpw">
+  <div class="modal"><h3>🔑 Reset Password</h3>
+    <div id="mrpw-info" class="info ib" style="margin-bottom:10px"></div>
+    <div class="fw"><label>Password Baru</label><input type="password" id="mrpw-pw1"/></div>
+    <div class="fw"><label>Konfirmasi</label><input type="password" id="mrpw-pw2"/></div>
+    <div id="mrpw-err" class="info ir" style="display:none"></div>
+    <div style="display:flex;gap:8px"><button class="bp" style="flex:1" onclick="confirmRPW()">Reset</button><button class="bs" onclick="closeModal('modal-rpw')">Batal</button></div>
+    <input type="hidden" id="mrpw-idx"/>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div id="hdr">
+  <img src="https://www.struclab.co.id/wp-content/uploads/2022/12/Logo-Small.png" onerror="this.style.display='none'"/>
+  <div class="hdiv"></div>
+  <div><div id="ht">SJK-ETABSRebarPro <span style="font-size:10px;background:var(--b3);color:var(--b1);padding:1px 7px;border-radius:10px">v2.2</span></div><div id="hs">PT Struclab Jaya Konsultindo</div></div>
+  <div id="hu" style="display:none">
+    <span id="hu-name"></span><span class="badge" id="hu-role"></span>
+    <button class="bs" style="padding:3px 9px;font-size:10px" onclick="openResetSelf()">🔑</button>
+    <button class="br" style="padding:3px 9px;font-size:10px" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<div id="main">
+<div id="side">
+  <div class="sg">ALUR KERJA</div>
+  <button class="tb active" data-tab="login" id="sb-login">🔐 Login</button>
+  <button class="tb locked" data-tab="project" id="sb-project">📁 Project Setup <span class="lk">🔒</span></button>
+  <button class="tb locked" data-tab="config" id="sb-config">⚙️ Parameter <span class="lk">🔒</span></button>
+  <button class="tb locked" data-tab="design" id="sb-design">🔩 Desain Tulangan <span class="lk">🔒</span></button>
+  <button class="tb locked" data-tab="output" id="sb-output">📦 Output <span class="lk">🔒</span></button>
+  <div class="sdiv"></div>
+  <div class="sg">REFERENSI</div>
+  <button class="tb" data-tab="sni" id="sb-sni">📖 SNI</button>
+  <div id="sb-extra" style="display:none">
+    <div class="sdiv"></div>
+    <div class="sg">ADMIN</div>
+    <button class="tb" id="sb-mgmt" data-tab="mgmt" style="display:none">👥 User</button>
+  </div>
+</div>
+
+<div id="body">
+
+<!-- LOGIN -->
+<div class="tp active" id="page-login">
+  <div style="max-width:420px;margin:0 auto;padding-top:6px">
+    <div style="text-align:center;margin-bottom:22px">
+      <img src="https://www.struclab.co.id/wp-content/uploads/2022/12/Logo-Small.png" style="height:52px;margin-bottom:8px" onerror="this.style.display='none'"/>
+      <div style="font-size:18px;font-weight:700">SJK-ETABSRebarPro</div>
+      <div style="font-size:11px;color:var(--g3)">PT Struclab Jaya Konsultindo</div>
+    </div>
+    <div id="ls1"><div class="card">
+      <div class="ct">👤 PILIH PERAN</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <button class="rbtn" onclick="selRole('Owner')">👑 Owner</button>
+        <button class="rbtn" onclick="selRole('Admin')">🛡️ Admin</button>
+        <button class="rbtn" onclick="selRole('Senior Engineer')">🔩 Senior Eng.</button>
+        <button class="rbtn" onclick="selRole('Junior Engineer')">📐 Junior Eng.</button>
+      </div>
+      <button class="bp dis" id="btn-nr" style="width:100%" onclick="goStep2()">Lanjut →</button>
+    </div></div>
+    <div id="ls2" style="display:none"><div class="card">
+      <div class="ct" id="ls2-title">🔐 LOGIN</div>
+      <div id="ls2-oa"><div class="fw"><label>Password</label><input type="password" id="l-pw" oninput="chkL()"/></div></div>
+      <div id="ls2-eng" style="display:none">
+        <div class="fw"><label>Username</label><input type="text" id="l-usr" oninput="chkL()"/></div>
+        <div class="fw"><label>Password</label><input type="password" id="l-pwe" oninput="chkL()"/></div>
+      </div>
+      <div id="l-err" class="info ir" style="display:none"></div>
+      <button class="bp dis" id="btn-li" style="width:100%;margin-top:4px" onclick="doLogin()">Masuk</button>
+      <button class="bs" style="width:100%;margin-top:8px" onclick="backStep1()">← Kembali</button>
+      <div id="ls2-ft" style="display:none;margin-top:10px;font-size:11px;color:var(--g3);padding:9px;background:var(--b5);border-radius:7px;border:1px solid var(--b4)">
+        ℹ️ Belum ada password. <a href="#" onclick="openFT();return false" style="color:var(--b1)">Buat sekarang.</a>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- PROJECT -->
+<div class="tp" id="page-project">
+  <h2>Project Setup</h2>
+  <div class="card"><div class="ct">📋 INFORMASI PROJECT</div>
+    <div class="g2">
+      <div class="fw"><label>Nama Project</label><input type="text" id="pnm" oninput="chkProj()"/></div>
+      <div class="fw"><label>No. Project</label><input readonly id="pno" value="SJK-2026-001"/></div>
+      <div class="fw"><label>Engineer PIC</label><input readonly id="ppic"/></div>
+      <div class="fw"><label>Tanggal</label><input readonly id="pdate"/></div>
+    </div>
+  </div>
+  <div class="card"><div class="ct">📂 UPLOAD FILE E2K / $ET</div>
+    <div class="info ib">fc', fy_long, fy_conf, dimensi section, story dan connectivity dibaca otomatis.</div>
+    <div class="drop" id="drop-e2k" onclick="trigE2k()" ondragover="dov(event,'e2k')" ondragleave="dol('e2k')" ondrop="dof(event,'e2k')">
+      <div class="di">📁</div><div style="color:var(--g3)">Drag & drop .e2k atau .et</div>
+      <div style="font-size:10px;color:var(--g4)">Klik untuk browse</div>
+    </div>
+    <input type="file" id="fi-e2k" accept=".e2k,.et,.txt" style="display:none" onchange="rdE2k(this)"/>
+    <div id="e2k-st" style="display:none;margin-top:10px"></div>
+  </div>
+  <button class="bp dis" id="btn-proj" onclick="goConfig()">Lanjut ke Parameter →</button>
+</div>
+
+<!-- CONFIG -->
+<div class="tp" id="page-config">
+  <h2>Parameter Desain</h2>
+  <div class="card"><div class="ct">🧱 MATERIAL & COVER</div>
+    <div class="g3">
+      <div class="fw"><label>fc' (MPa)</label><input type="number" id="fc" value="30" min="20" max="80"/></div>
+      <div class="fw"><label>fy Longitudinal (MPa)</label><input type="number" id="fy_long" value="420" step="10"/></div>
+      <div class="fw"><label>fy Confinement (MPa)</label><input type="number" id="fy_conf" value="240" step="10"/></div>
+      <div class="fw"><label>Agregat maks (mm)</label><select id="agg"><option value="10">10</option><option value="16">16</option><option value="20" selected>20</option><option value="25">25</option></select></div>
+      <div class="fw"><label>Selimut ke luar sengkang (mm)</label><div class="nw" style="margin-top:3px"><input type="number" id="cov" value="40" min="20" max="80" step="5"/></div></div>
+      <div class="fw"><label>λ</label><select id="lam"><option value="1" selected>1.0 normal</option><option value="0.75">0.75 ringan</option></select></div>
+    </div>
+  </div>
+  <div class="card"><div class="ct">🔩 LONGITUDINAL — TIPE G (BALOK INDUK)</div>
+    <div class="info ib" style="font-size:11px">Base diameter konsisten tumpuan & lapangan. Add-bar = 1 step di atas base. Beda ≤1 batang → tipe sama (ambil terbesar). Beda ≥2 → suffix baru.</div>
+    <div class="g2">
+      <div class="fw"><label>Diameter base minimum</label><select id="g_dmin"><option value="10">D10</option><option value="13" selected>D13</option><option value="16">D16</option><option value="19">D19</option></select></div>
+      <div class="fw"><label>Diameter base maksimum</label><select id="g_dmax"><option value="13">D13</option><option value="16">D16</option><option value="19">D19</option><option value="22" selected>D22</option><option value="25">D25</option><option value="29">D29</option><option value="32">D32</option></select></div>
+    </div>
+  </div>
+  <div class="card"><div class="ct">🔩 LONGITUDINAL — TIPE B (BALOK ANAK)</div>
+    <div class="g2">
+      <div class="fw"><label>Diameter base minimum</label><select id="b_dmin"><option value="10" selected>D10</option><option value="13">D13</option><option value="16">D16</option></select></div>
+      <div class="fw"><label>Diameter base maksimum</label><select id="b_dmax"><option value="13">D13</option><option value="16">D16</option><option value="19" selected>D19</option><option value="22">D22</option><option value="25">D25</option></select></div>
+    </div>
+  </div>
+  <div class="card"><div class="ct">⬡ SENGKANG / CONFINEMENT</div>
+    <div class="g3">
+      <div class="fw"><label>Diameter min sengkang</label><select id="swDmin"><option value="8" selected>D8</option><option value="10">D10</option><option value="13">D13</option></select></div>
+      <div class="fw"><label>Diameter maks sengkang</label><select id="swDmax"><option value="8">D8</option><option value="10" selected>D10</option><option value="13">D13</option><option value="16">D16</option></select></div>
+      <div class="fw"><label>Spasi tumpuan maks (gempa)</label><div class="nw" style="margin-top:3px"><input type="number" id="swT" value="100" min="50" max="150" step="25"/><span>mm</span></div></div>
+      <div class="fw"><label>Pembulatan spasi lapangan</label><select id="swR"><option value="5">5mm</option><option value="10">10mm</option><option value="25" selected>25mm</option><option value="50">50mm</option></select></div>
+      <div class="fw"><label>Threshold 4 kaki (b&gt;ini)</label><div class="nw" style="margin-top:3px"><input type="number" id="leg4" value="250" min="150" max="450" step="50"/><span>mm</span></div></div>
+      <div class="fw"><label>Spasi min praktis</label><div class="nw" style="margin-top:3px"><input type="number" id="swMin" value="50" min="25" max="100" step="25"/><span>mm</span></div></div>
+    </div>
+  </div>
+  <div class="card"><div class="ct">🏢 STORY ZONE GROUPING</div>
+    <div class="info ib" style="font-size:11px">Story dibagi per N lantai dari bawah ke atas. Sisa story digabung ke zona terakhir. Suffix kumulatif lintas zona.</div>
+    <div class="fw">
+      <label>Samakan desain per <b id="spzv">1</b> lantai</label>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:6px">
+        <input type="range" min="1" max="8" value="1" id="spz" style="flex:1;max-width:160px" oninput="updZ(this.value)"/>
+        <span id="spzn" style="font-size:18px;font-weight:700;color:var(--b1)">1</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap" id="zone-wrap"></div>
+  </div>
+  <button class="bp" onclick="goDesign()">Simpan & Lanjut ke Desain →</button>
+</div>
+
+<!-- DESIGN -->
+<div class="tp" id="page-design">
+  <h2>Desain Tulangan</h2>
+  <div class="card"><div class="ct">📊 UPLOAD EXCEL ETABS — FLEXURAL & SHEAR</div>
+    <div class="info ib">Upload kedua file sekaligus. Engine grouping M2 (topologi G/B), M3 (longitudinal), M4 (sengkang) dijalankan bersamaan dengan suffix kumulatif lintas zona.</div>
+    <div class="g2" style="margin-top:10px">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--g3);margin-bottom:6px">📄 Flexural Reinf Excel</div>
+        <div class="drop" id="drop-flex" onclick="trigFlex()" ondragover="dov(event,'flex')" ondragleave="dol('flex')" ondrop="dof(event,'flex')">
+          <div class="di">📊</div><div style="color:var(--g3);font-size:12px">Flexural_Reinf.xlsx</div>
+          <div style="font-size:10px;color:var(--g4)">Story | Label | Section | Location | As Top | As Bot</div>
+        </div>
+        <input type="file" id="fi-flex" accept=".xlsx,.xls,.csv" style="display:none" onchange="rdFlex(this)"/>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--g3);margin-bottom:6px">📄 Shear Reinf Excel</div>
+        <div class="drop" id="drop-shear" onclick="trigShear()" ondragover="dov(event,'shear')" ondragleave="dol('shear')" ondrop="dof(event,'shear')">
+          <div class="di">📊</div><div style="color:var(--g3);font-size:12px">Shear_Reinf.xlsx</div>
+          <div style="font-size:10px;color:var(--g4)">Story | Label | Section | Location | Vu | Av/s</div>
+        </div>
+        <input type="file" id="fi-shear" accept=".xlsx,.xls,.csv" style="display:none" onchange="rdShear(this)"/>
+      </div>
+    </div>
+    <div id="up-status" style="margin-top:10px"></div>
+  </div>
+  <div id="eng-wrap" style="display:none">
+    <div class="card"><div class="ct">⚙️ FILTER & ENGINE</div>
+      <div class="filter-bar">
+        <label>Tipe:</label><select id="f-tp" onchange="renderR()"><option value="">G+B</option><option value="G">G</option><option value="B">B</option></select>
+        <label>Zona:</label><select id="f-zn" onchange="renderR()"><option value="">Semua</option></select>
+        <label>Section:</label><input type="text" id="f-sc" placeholder="misal G30X60" oninput="renderR()"/>
+        <label>Status:</label><select id="f-fl" onchange="renderR()"><option value="">Semua</option><option value="PASS">PASS</option><option value="FAIL">FAIL</option></select>
+      </div>
+      <div id="ep" style="display:none">
+        <div class="pgbar"><div class="pgfill" id="ep-bar" style="width:0%"></div></div>
+        <div id="ep-msg" style="font-size:11px;color:var(--g3);margin-top:4px"></div>
+      </div>
+      <button class="bp" id="btn-run" onclick="runEngine()">▶ Jalankan Engine (M2 + M3 + M4)</button>
+    </div>
+    <div id="res-wrap" style="display:none">
+      <div class="card"><div class="ct">📊 RINGKASAN</div>
+        <div id="res-sum" class="info ig" style="margin-bottom:10px"></div>
+        <div id="res-stats" class="g4" style="margin-bottom:8px"></div>
+      </div>
+      <div class="card"><div class="ct">🔩 HASIL DESAIN TULANGAN</div>
+        <div style="overflow-x:auto">
+          <table><thead><tr>
+            <th>Grup</th><th>Section</th><th>b×h</th><th>Zona</th>
+            <th>Top Tump (L/M/R)</th><th>Bot Lap</th>
+            <th>Sengkang Tump</th><th>Sengkang Lap</th>
+            <th>As Top</th><th>As Bot</th><th>Status</th>
+          </tr></thead><tbody id="tb-res"></tbody></table>
+        </div>
+      </div>
+      <div class="card"><div class="ct">📥 DOWNLOAD</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="bg" onclick="dlXLSX()">⬇️ Excel Penulangan</button>
+          <button class="bg" onclick="dlDXF()">⬇️ DXF (semua story)</button>
+          <button class="bg" onclick="dlE2Kv1()">⬇️ E2K v1 (Longitudinal)</button>
+          <button class="bg" onclick="dlE2KFinal()">⬇️ E2K Final (Long+Shear)</button>
+          <button class="bp" onclick="dlReport()">⬇️ Laporan .txt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OUTPUT -->
+<div class="tp" id="page-output">
+  <h2>Output & Download</h2>
+  <div class="card"><div class="ct">📦 SEMUA FILE OUTPUT</div>
+    <div id="out-files"></div>
+    <button class="bp" style="width:100%;margin-top:10px" onclick="dlAll()">⬇️ Download Semua</button>
+  </div>
+  <div class="card"><div class="ct">💾 SAVE PROJECT</div>
+    <div id="sv-name" style="font-family:monospace;font-size:12px;color:var(--b1);padding:9px;background:var(--b5);border-radius:7px;border:1px solid var(--b4);margin-bottom:10px"></div>
+    <button class="bp" id="btn-save" onclick="saveProj()">💾 Simpan</button>
+    <div id="sv-ok" class="info ig" style="display:none;margin-top:7px"></div>
+  </div>
+</div>
+
+<!-- MGMT -->
+<div class="tp" id="page-mgmt">
+  <h2>Manajemen User</h2>
+  <div id="mgmt-own" style="display:none"><div class="card"><div class="ct">🛡️ PASSWORD ADMIN</div>
+    <button class="bp" onclick="openSetPw('Admin','admin')">🔑 Set/Reset Password Admin</button>
+  </div></div>
+  <div class="card"><div class="ct">👥 DAFTAR ENGINEER</div>
+    <button class="bp" style="margin-bottom:12px" onclick="openAddEng()">➕ Tambah Engineer</button>
+    <div id="eng-list"><div class="info ib">Memuat...</div></div>
+  </div>
+  <div id="mgmt-own-pw" style="display:none"><div class="card"><div class="ct">👑 PASSWORD OWNER</div>
+    <button class="bp" onclick="openSetPw('Owner','owner')">🔑 Ubah Password Owner</button>
+  </div></div>
+</div>
+
+<!-- SNI -->
+<div class="tp" id="page-sni">
+  <h2>Referensi SNI</h2>
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+    <button id="sb1" onclick="setSNI('s1')" style="padding:7px 12px;border-radius:9px;border:2px solid #1958A5;background:#1958A515;color:#1958A5;font-size:11px;font-weight:600;cursor:pointer">SNI 2847:2019</button>
+    <button id="sb2" onclick="setSNI('s2')" style="padding:7px 12px;border-radius:9px;border:2px solid var(--b4);background:#fff;color:var(--g3);font-size:11px;font-weight:600;cursor:pointer">SNI 1726:2019</button>
+    <button id="sb3" onclick="setSNI('s3')" style="padding:7px 12px;border-radius:9px;border:2px solid var(--b4);background:#fff;color:var(--g3);font-size:11px;font-weight:600;cursor:pointer">SNI 1727:2020</button>
+  </div>
+  <div id="sni-hdr" style="padding:8px 13px;border-radius:7px;margin-bottom:10px;background:#1958A510;border:1px solid #1958A530">
+    <div id="sni-code" style="font-size:10px;font-weight:700;text-transform:uppercase;color:#1958A5">SNI 2847:2019</div>
+    <div id="sni-sub" style="font-size:12px;margin-top:2px">Persyaratan Beton Struktural</div>
+  </div>
+  <input type="text" id="sni-q" placeholder="🔍 Cari pasal..." oninput="fSNI()" style="margin-bottom:10px"/>
+  <div id="sni-list"></div>
+</div>
+
+</div><!-- /body -->
+</div><!-- /main -->
+
+<script>
+/* ══════════════════════════════════════
+   CONSTANTS & DB
+══════════════════════════════════════ */
+const DB={8:50.3,10:78.5,13:132.7,16:201.1,19:283.5,22:380.1,25:490.9,29:660.5,32:804.2};
+const DALL=[8,10,13,16,19,22,25,29,32];
+const SW_DALL=[8,10,13,16];
+
+/* ══ STORAGE & AUTH ══ */
+const lsG=k=>{try{return JSON.parse(localStorage.getItem('sjk_'+k))}catch{return null}};
+const lsS=(k,v)=>localStorage.setItem('sjk_'+k,JSON.stringify(v));
+const pwH=s=>{let h=5381;for(let i=0;i<s.length;i++)h=(Math.imul(h,33)^s.charCodeAt(i))>>>0;return 'h'+h.toString(36);};
+(()=>{if(!lsG('oi')){lsS('op',null);lsS('oi',1);}if(!lsG('ai')){lsS('ap',null);lsS('ai',1);}if(!lsG('engs'))lsS('engs',[]);})();
+const getEngs=()=>lsG('engs')||[];
+const saveEngs=l=>lsS('engs',l);
+let SESSION={role:'',name:'',user:''};
+
+/* ══ MODAL ══ */
+const openModal=id=>document.getElementById(id).classList.add('show');
+const closeModal=id=>document.getElementById(id).classList.remove('show');
+let _spwT=null;
+function openSetPw(label,type,idx){
+  _spwT={type,idx};
+  document.getElementById('msp-title').textContent='🔑 Set Password — '+label;
+  document.getElementById('msp-info').textContent=type==='owner'?'Ubah password Owner.':type==='admin'?'Ubah password Admin.':'Set password engineer.';
+  document.getElementById('msp-pw1').value='';document.getElementById('msp-pw2').value='';
+  document.getElementById('msp-err').style.display='none';openModal('modal-setpw');
+}
+function openResetSelf(){
+  const label=SESSION.role,type=SESSION.role==='Owner'?'owner':SESSION.role==='Admin'?'admin':'self_eng';
+  const idx=SESSION.role.includes('Eng')?getEngs().findIndex(e=>e.user===SESSION.user):-1;
+  openSetPw(label,type,idx);
+}
+const openFT=()=>openSetPw(_lr,_lr==='Owner'?'owner':'admin');
+function confirmSetPw(){
+  const p1=document.getElementById('msp-pw1').value,p2=document.getElementById('msp-pw2').value,err=document.getElementById('msp-err');
+  if(p1.length<8){err.style.display='block';err.textContent='Min 8 karakter.';return;}
+  if(p1!==p2){err.style.display='block';err.textContent='Konfirmasi tidak cocok.';return;}
+  const h=pwH(p1),t=_spwT.type;
+  if(t==='owner')lsS('op',h);else if(t==='admin')lsS('ap',h);
+  else{const l=getEngs(),i=_spwT.idx;if(i>=0){l[i].ph=h;saveEngs(l);}}
+  closeModal('modal-setpw');alert('✅ Password disimpan.');
+  if(t==='owner'||t==='admin')finishLogin(t==='owner'?'Owner':'Admin',(t==='owner'?'Owner':'Admin')+' SJK',t);
+}
+function openAddEng(){
+  document.getElementById('me-title').textContent='👤 Tambah Engineer';
+  document.getElementById('me-idx').value='-1';
+  ['me-name','me-user','me-pw'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('me-pw-wrap').style.display='block';
+  document.getElementById('me-role').value='Senior Engineer';
+  document.getElementById('me-err').style.display='none';openModal('modal-eng');
+}
+function openEditEng(i){
+  const e=getEngs()[i];
+  document.getElementById('me-title').textContent='✏️ Edit Engineer';
+  document.getElementById('me-idx').value=i;
+  document.getElementById('me-name').value=e.name;
+  document.getElementById('me-user').value=e.user;
+  document.getElementById('me-pw').value='';
+  document.getElementById('me-pw-wrap').style.display='none';
+  document.getElementById('me-role').value=e.role;
+  document.getElementById('me-err').style.display='none';openModal('modal-eng');
+}
+function saveEng(){
+  const i=parseInt(document.getElementById('me-idx').value),nm=document.getElementById('me-name').value.trim(),usr=document.getElementById('me-user').value.trim().toLowerCase(),pw=document.getElementById('me-pw').value,rl=document.getElementById('me-role').value,err=document.getElementById('me-err');
+  if(!nm||!usr){err.style.display='block';err.textContent='Nama & username wajib.';return;}
+  const l=getEngs();
+  if(i===-1){if(pw.length<8){err.style.display='block';err.textContent='Password min 8 karakter.';return;}if(l.find(e=>e.user===usr)){err.style.display='block';err.textContent='Username sudah ada.';return;}l.push({name:nm,user:usr,role:rl,ph:pwH(pw)});}
+  else{l[i].name=nm;l[i].user=usr;l[i].role=rl;}
+  saveEngs(l);closeModal('modal-eng');renderEngList();
+}
+function delEng(i){const l=getEngs();if(!confirm('Hapus "'+l[i].name+'"?'))return;l.splice(i,1);saveEngs(l);renderEngList();}
+function openRPW(i){const l=getEngs();document.getElementById('mrpw-info').textContent='Reset: '+l[i].name+' (@'+l[i].user+')';document.getElementById('mrpw-pw1').value='';document.getElementById('mrpw-pw2').value='';document.getElementById('mrpw-err').style.display='none';document.getElementById('mrpw-idx').value=i;openModal('modal-rpw');}
+function confirmRPW(){const p1=document.getElementById('mrpw-pw1').value,p2=document.getElementById('mrpw-pw2').value,i=parseInt(document.getElementById('mrpw-idx').value),err=document.getElementById('mrpw-err');if(p1.length<8){err.style.display='block';err.textContent='Min 8 karakter.';return;}if(p1!==p2){err.style.display='block';err.textContent='Tidak cocok.';return;}const l=getEngs();l[i].ph=pwH(p1);saveEngs(l);closeModal('modal-rpw');alert('✅ Password '+l[i].name+' direset.');}
+function renderEngList(){
+  const l=getEngs(),el=document.getElementById('eng-list');if(!el)return;
+  if(!l.length){el.innerHTML='<div class="info ib">Belum ada engineer.</div>';return;}
+  el.innerHTML=l.map((e,i)=>`<div class="eng-row">
+    <div class="eng-av">${e.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
+    <div class="eng-info"><div class="eng-name">${e.name}</div><div class="eng-sub">@${e.user} · <span class="eng-role">${e.role}</span></div></div>
+    <button class="bs" style="padding:4px 9px;font-size:11px" onclick="openEditEng(${i})">✏️</button>
+    <button class="bs" style="padding:4px 9px;font-size:11px" onclick="openRPW(${i})">🔑</button>
+    <button class="br" style="padding:4px 9px;font-size:11px" onclick="delEng(${i})">✕</button>
+  </div>`).join('');
+}
+
+/* ══ LOGIN ══ */
+let cRole='',_lr='';
+function selRole(r){cRole=r;document.querySelectorAll('.rbtn').forEach(b=>b.classList.toggle('active',b.textContent.includes(r)));const btn=document.getElementById('btn-nr');btn.classList.remove('dis');btn.disabled=false;}
+function goStep2(){if(!cRole)return;_lr=cRole;document.getElementById('ls1').style.display='none';document.getElementById('ls2').style.display='block';document.getElementById('ls2-title').textContent='🔐 LOGIN — '+cRole.toUpperCase();document.getElementById('l-err').style.display='none';document.getElementById('ls2-ft').style.display='none';const isE=cRole.includes('Eng');document.getElementById('ls2-oa').style.display=isE?'none':'block';document.getElementById('ls2-eng').style.display=isE?'block':'none';if(!isE){const pw=lsG(cRole==='Owner'?'op':'ap');if(!pw)document.getElementById('ls2-ft').style.display='block';}document.getElementById('btn-li').classList.add('dis');document.getElementById('btn-li').disabled=true;}
+function backStep1(){document.getElementById('ls1').style.display='block';document.getElementById('ls2').style.display='none';cRole='';document.querySelectorAll('.rbtn').forEach(b=>b.classList.remove('active'));document.getElementById('btn-nr').classList.add('dis');document.getElementById('btn-nr').disabled=true;}
+function chkL(){const isE=_lr.includes('Eng'),ok=isE?(document.getElementById('l-usr').value.trim().length>0&&document.getElementById('l-pwe').value.length>0):(document.getElementById('l-pw').value.length>0);document.getElementById('btn-li').classList.toggle('dis',!ok);document.getElementById('btn-li').disabled=!ok;}
+function doLogin(){
+  const isE=_lr.includes('Eng'),err=document.getElementById('l-err');err.style.display='none';
+  if(!isE){const pw=document.getElementById('l-pw').value,stored=lsG(_lr==='Owner'?'op':'ap');if(!stored){err.style.display='block';err.textContent='Belum ada password.';return;}if(pwH(pw)!==stored){err.style.display='block';err.textContent='❌ Password salah.';document.getElementById('l-pw').value='';return;}finishLogin(_lr,_lr+' SJK',_lr.toLowerCase());}
+  else{const usr=document.getElementById('l-usr').value.trim().toLowerCase(),pw=document.getElementById('l-pwe').value,l=getEngs(),e=l.find(e=>e.user===usr&&e.role===_lr);if(!e){err.style.display='block';err.textContent='❌ Username tidak ditemukan.';return;}if(!e.ph||pwH(pw)!==e.ph){err.style.display='block';err.textContent='❌ Password salah.';document.getElementById('l-pwe').value='';return;}finishLogin(_lr,e.name,e.user);}
+}
+function finishLogin(role,name,user){
+  SESSION={role,name,user};
+  document.getElementById('hu').style.display='flex';document.getElementById('hu-name').textContent='👤 '+name;document.getElementById('hu-role').textContent=role;
+  document.getElementById('ppic').value=name+' ('+role+')';document.getElementById('pdate').value=nowStr();
+  unlock('project');showTab('project');document.getElementById('sb-extra').style.display='block';
+  if(role==='Owner'||role==='Admin'){const mb=document.getElementById('sb-mgmt');mb.style.display='flex';renderEngList();if(role==='Owner'){document.getElementById('mgmt-own').style.display='block';document.getElementById('mgmt-own-pw').style.display='block';}}
+}
+const doLogout=()=>{if(confirm('Yakin logout?'))location.reload();};
+
+/* ══ NAV ══ */
+function showTab(id){document.querySelectorAll('.tp').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tb').forEach(b=>b.classList.remove('active'));const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');const sb=document.getElementById('sb-'+id);if(sb)sb.classList.add('active');if(id==='mgmt')renderEngList();}
+document.querySelectorAll('.tb').forEach(b=>{b.addEventListener('click',()=>{if(b.classList.contains('locked'))return;const t=b.getAttribute('data-tab');if(t)showTab(t);});});
+function unlock(id){const s=document.getElementById('sb-'+id);if(!s)return;s.classList.remove('locked');s.innerHTML=s.innerHTML.replace(/<span class="lk">.*?<\/span>/,'');}
+const nowStr=()=>new Date().toLocaleString('id-ID',{timeZone:'Asia/Jakarta',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'})+' WIB';
+
+/* ══ PROJECT & E2K ══ */
+let e2kParsed=false,e2kRaw='';
+let e2kData={sections:{},stories:[],colJoints:new Set(),fc:null,fy_long:null,fy_conf:null};
+let flexRaw=[],shearRaw=[],flexOK=false,shearOK=false;
+let designResult=[];
+let cfg={};
+
+function chkProj(){const ok=document.getElementById('pnm').value&&e2kParsed;document.getElementById('btn-proj').classList.toggle('dis',!ok);document.getElementById('btn-proj').disabled=!ok;}
+function goConfig(){if(!document.getElementById('pnm').value||!e2kParsed)return;unlock('config');showTab('config');updZ(1);}
+function goDesign(){cfg=getCfg();unlock('design');showTab('design');}
+const trigE2k=()=>document.getElementById('fi-e2k').click();
+const trigFlex=()=>document.getElementById('fi-flex').click();
+const trigShear=()=>document.getElementById('fi-shear').click();
+function dov(e,id){e.preventDefault();document.getElementById('drop-'+id).classList.add('hov');}
+function dol(id){document.getElementById('drop-'+id).classList.remove('hov');}
+function dof(e,id){e.preventDefault();dol(id);const f=e.dataTransfer.files[0];if(!f)return;if(id==='e2k')parseE2k(f);else if(id==='flex')parseFlex(f);else parseShear(f);}
+const rdE2k=i=>{if(i.files[0])parseE2k(i.files[0]);};
+const rdFlex=i=>{if(i.files[0])parseFlex(i.files[0]);};
+const rdShear=i=>{if(i.files[0])parseShear(i.files[0]);};
+
+function parseE2k(file){
+  const drop=document.getElementById('drop-e2k');drop.innerHTML='<div class="di">⏳</div><div style="color:var(--b1)">Parsing...</div>';
+  const r=new FileReader();r.onload=e=>{
+    try{e2kRaw=e.target.result;const d=parseE2kText(e2kRaw);
+      const nb=Object.values(d.sections).length;
+      drop.innerHTML=`<div class="di">✅</div><div style="color:var(--green);font-weight:600">${file.name}</div><div style="font-size:10px;color:var(--g3)">${nb} section balok · ${d.stories.length} story</div>`;
+      document.getElementById('e2k-st').style.display='block';
+      document.getElementById('e2k-st').innerHTML=`<div class="g4">
+        <div class="stbox"><div class="stk">Stories</div><div class="stv">${d.stories.length}</div></div>
+        <div class="stbox"><div class="stk">Sec. Balok</div><div class="stv">${nb}</div></div>
+        <div class="stbox"><div class="stk">fc' (MPa)</div><div class="stv">${d.fc||'?'}</div></div>
+        <div class="stbox"><div class="stk">fy Long</div><div class="stv">${d.fy_long||'?'}</div></div>
+      </div>
+      <div class="info ib" style="margin-top:8px;font-size:11px">fy_long: <b>${d.fy_long||'?'} MPa</b> | fy_conf: <b>${d.fy_conf||'?'} MPa</b> | Kolom joint terdeteksi: <b>${d.colJoints.size}</b></div>
+      <div class="info iy" style="margin-top:4px;font-size:11px">⚠️ Klasifikasi G/B dari topologi (joint kolom). Section BB/KB dikecualikan.</div>`;
+      if(d.fc)document.getElementById('fc').value=d.fc;
+      if(d.fy_long)document.getElementById('fy_long').value=d.fy_long;
+      if(d.fy_conf)document.getElementById('fy_conf').value=d.fy_conf;
+      e2kData=d;e2kParsed=true;chkProj();updZ(document.getElementById('spz').value);
+    }catch(err){drop.innerHTML=`<div class="di">❌</div><div style="color:var(--red)">${err.message}</div>`;}
+  };r.readAsText(file);
+}
+
+function parseE2kText(txt){
+  const lines=txt.split(/\r?\n/);
+  const d={sections:{},stories:[],colJoints:new Set(),fc:null,fy_long:null,fy_conf:null,matByName:{},
+    frameMembers:{},jointCoords:{},jointXY:{}};
+
+  for(const raw of lines){
+    const line=raw.trim();if(!line||line.startsWith('$'))continue;
+    // Materials
+    if(/^MATERIAL\s+/i.test(line)){
+      const nm=line.match(/MATERIAL\s+"?([^"\s]+)"?/i)?.[1];if(!nm)continue;
+      const mtype=line.match(/TYPE\s+"?([^"\s]+)"?/i)?.[1]||'';
+      const fc=line.match(/\bFC\b\s+([\d.]+)/i),fy=line.match(/\bFY\b\s+([\d.]+)/i);
+      let fcV=null,fyV=null;
+      if(fc){const v=parseFloat(fc[1]);fcV=v>1000?Math.round(v/1000):v;}
+      if(fy){const v=parseFloat(fy[1]);fyV=v>10000?Math.round(v/1000):v;}
+      d.matByName[nm]={type:mtype,fc:fcV,fy:fyV};
+      if(fcV&&!d.fc)d.fc=fcV;
+    }
+    // Stories
+    if(/^STORY\s+/i.test(line)){const m=line.match(/STORY\s+"?([^"\s]+)"?/i);if(m&&m[1]!=='BASE'&&!d.stories.includes(m[1]))d.stories.push(m[1]);}
+    // Joint coordinates — baca X, Y, Z
+    if(/^JOINT\s+/i.test(line)){
+      const nm=line.match(/JOINT\s+"?([^"\s]+)"?/i)?.[1];
+      const xm=line.match(/\bX\b\s+([-\d.]+)/i);
+      const ym=line.match(/\bY\b\s+([-\d.]+)/i);
+      const zm=line.match(/\bZ\b\s+([-\d.]+)/i);
+      if(nm){
+        if(zm)d.jointCoords[nm]=parseFloat(zm[1]);
+        if(xm&&ym)d.jointXY[nm]={x:parseFloat(xm[1]),y:parseFloat(ym[1])};
+      }
+    }
+    // Frame members (connectivity) — FRAMEASSIGN or FRAMEOBJ
+    if(/^FRAMEOBJ\s+/i.test(line)||/^FRAME\s+/i.test(line)){
+      const nm=line.match(/(?:FRAMEOBJ|FRAME)\s+"?([^"\s]+)"?/i)?.[1];
+      const ptI=line.match(/\bPOINTI\b\s+"?([^"\s]+)"?/i)?.[1]||line.match(/\bI\b\s+"?([^"\s]+)"?/i)?.[1];
+      const ptJ=line.match(/\bPOINTJ\b\s+"?([^"\s]+)"?/i)?.[1]||line.match(/\bJ\b\s+"?([^"\s]+)"?/i)?.[1];
+      const sec=line.match(/SECTION\s+"([^"]+)"/i)?.[1];
+      const story=line.match(/STORY\s+"?([^"\s]+)"?/i)?.[1];
+      if(nm&&ptI&&ptJ)d.frameMembers[nm]={ptI,ptJ,sec,story};
+    }
+    // Column sections → mark joints as column joints
+    if(/^FRAMESECTION\s+/i.test(line)){
+      const nm=line.match(/FRAMESECTION\s+"([^"]+)"/i)?.[1];
+      const D=line.match(/\bD\b\s+([\d.]+)/i)||line.match(/\bT3\b\s+([\d.]+)/i);
+      const B=line.match(/\bB\b\s+([\d.]+)/i)||line.match(/\bT2\b\s+([\d.]+)/i);
+      if(!nm||!D||!B)continue;
+      let h=parseFloat(D[1]),b=parseFloat(B[1]);
+      if(h<10)h*=1000;if(b<10)b*=1000;
+      const up=nm.toUpperCase();
+      if(up.startsWith('BB')||up.startsWith('KB'))continue;
+      // Kolom: nama section mengandung "C","K","COL","KOL" atau dimensi square-ish
+      const isCol=up.match(/^(C\d|K\d|COL|KOL)/i)||(Math.abs(b-h)/Math.max(b,h)<0.1&&b>=200);
+      if(!isCol){
+        const longMat=line.match(/LONGREBAR\s+"?([^"\s]+)"?/i)?.[1];
+        const confMat=line.match(/CONFREBAR\s+"?([^"\s]+)"?/i)?.[1];
+        if(longMat&&d.matByName[longMat]?.fy&&!d.fy_long)d.fy_long=d.matByName[longMat].fy;
+        if(confMat&&d.matByName[confMat]?.fy&&!d.fy_conf)d.fy_conf=d.matByName[confMat].fy;
+        d.sections[nm]={name:nm,b,h,type:'BEAM'};
+      }
+    }
+  }
+  // fy fallback
+  if(!d.fy_long||!d.fy_conf){
+    const rbs=Object.values(d.matByName).filter(m=>m.fy&&(m.type.toLowerCase().includes('rebar')||m.type.toLowerCase().includes('steel'))).sort((a,b)=>(b.fy||0)-(a.fy||0));
+    if(!d.fy_long&&rbs[0])d.fy_long=rbs[0].fy;
+    if(!d.fy_conf)d.fy_conf=(rbs[1]||rbs[0])?.fy||240;
+  }
+  if(!d.fy_long)d.fy_long=420;if(!d.fy_conf)d.fy_conf=240;
+  if(!d.stories.length)d.stories=['L2','L3','Roof'];
+
+  // Tentukan col joints dari FRAMESECASSIGN (section yg square-ish = kolom)
+  // Fallback: semua joint yang tidak ada baloknya
+  // Simple approach: tandai joint dari member yg section-nya kolom
+  for(const[,fm] of Object.entries(d.frameMembers)){
+    if(fm.sec){
+      const up=fm.sec.toUpperCase();
+      // Kolom: nama C/K atau dimensi square
+      const sec=d.sections[fm.sec];
+      const isColSec=up.match(/^(C\d|K\d|COL|KOL)/i)||(sec&&Math.abs(sec.b-sec.h)/Math.max(sec.b,sec.h)<0.1&&sec.b>=200&&!d.sections[fm.sec]);
+      if(isColSec){d.colJoints.add(fm.ptI);d.colJoints.add(fm.ptJ);}
+    }
+  }
+  // If no col joints found, mark all joints that appear as BOTH ptI and ptJ multiple times
+  if(d.colJoints.size===0){
+    const cnt={};
+    for(const[,fm] of Object.entries(d.frameMembers)){
+      cnt[fm.ptI]=(cnt[fm.ptI]||0)+1;cnt[fm.ptJ]=(cnt[fm.ptJ]||0)+1;
+    }
+    for(const[j,c] of Object.entries(cnt)){if(c>=3)d.colJoints.add(j);}
+  }
+  return d;
+}
+
+/* ══ M2: Classify G/B ══ */
+function classifyBeam(secName,ptI,ptJ){
+  // Kedua ujung di kolom joint → G, selainnya → B
+  const iCol=e2kData.colJoints.has(ptI);
+  const jCol=e2kData.colJoints.has(ptJ);
+  if(iCol&&jCol)return'G';
+  // Fallback: dari nama section
+  const up=secName.toUpperCase();
+  if(up.match(/^(G|TG)/))return'G';
+  return'B';
+}
+
+/* ══ CONFIG ══ */
+function updZ(v){
+  const sl=e2kData.stories.length?e2kData.stories:['L2','L3','Roof'];
+  document.getElementById('spzv').textContent=v;document.getElementById('spzn').textContent=v;
+  const cont=document.getElementById('zone-wrap');cont.innerHTML='';
+  buildZones(sl,+v).forEach((z,i)=>{const t=document.createElement('span');t.className='zone-chip';t.textContent=`Z${i+1}: ${z.length===1?z[0]:z[0]+'–'+z[z.length-1]}`;cont.appendChild(t);});
+}
+function buildZones(stories,n){
+  if(n<=1)return stories.map(s=>[s]);
+  const zones=[];
+  for(let i=0;i<stories.length;i+=n){
+    const chunk=stories.slice(i,i+n);
+    if(i+n>=stories.length&&zones.length>0&&chunk.length<n)zones[zones.length-1].push(...chunk);
+    else zones.push(chunk);
+  }
+  return zones;
+}
+function getCfg(){
+  return{
+    fc:+document.getElementById('fc').value,fy_long:+document.getElementById('fy_long').value,fy_conf:+document.getElementById('fy_conf').value,
+    agg:+document.getElementById('agg').value,cov:+document.getElementById('cov').value,lam:+document.getElementById('lam').value,
+    g_dmin:+document.getElementById('g_dmin').value,g_dmax:+document.getElementById('g_dmax').value,
+    b_dmin:+document.getElementById('b_dmin').value,b_dmax:+document.getElementById('b_dmax').value,
+    swDmin:+document.getElementById('swDmin').value,swDmax:+document.getElementById('swDmax').value,
+    swT:+document.getElementById('swT').value,swR:+document.getElementById('swR').value,
+    leg4:+document.getElementById('leg4').value,swMin:+document.getElementById('swMin').value,
+    zN:+document.getElementById('spz').value,
+  };
+}
+
+/* ══ EXCEL PARSER ══ */
+function parseXLS(file,onDone){
+  const r=new FileReader();r.onload=e=>{
+    try{const wb=XLSX.read(e.target.result,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];
+      const all=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      let hIdx=2;
+      for(let i=0;i<Math.min(6,all.length);i++){const row=all[i].map(c=>String(c).toLowerCase());if(row.some(c=>c.includes('story'))&&row.some(c=>c.includes('section'))){hIdx=i;break;}}
+      const headers=all[hIdx].map(c=>String(c).trim());
+      onDone(headers,all.slice(hIdx+1),file.name);
+    }catch(err){onDone(null,null,file.name,err.message);}
+  };r.readAsArrayBuffer(file);
+}
+function cFind(headers,...kws){for(const kw of kws){const i=headers.findIndex(h=>h.toLowerCase().replace(/[\s()/²\[\]]/g,'').includes(kw.toLowerCase().replace(/\s/g,'')));if(i>=0)return i;}return -1;}
+
+function parseFlex(file){
+  const drop=document.getElementById('drop-flex');drop.innerHTML='<div class="di">⏳</div><div style="color:var(--b1)">Parsing...</div>';
+  parseXLS(file,(headers,rows,fname,err)=>{
+    if(err){drop.innerHTML=`<div class="di">❌</div><div style="color:var(--red)">${err}</div>`;return;}
+    const ci={story:cFind(headers,'story'),sec:cFind(headers,'section','sect'),label:cFind(headers,'label'),loc:cFind(headers,'location','loc'),at:cFind(headers,'astop','atop','areatoprebar','renftop','top'),ab:cFind(headers,'asbot','abot','areabottomrebar','renfbot','bottom','bot')};
+    flexRaw=[];
+    for(const row of rows){
+      if(!row||!row.length||!row[ci.story])continue;
+      const story=String(row[ci.story]).trim(),sec=String(row[ci.sec]??'').trim();
+      if(!story||!sec||/^(BB|KB)/i.test(sec))continue;
+      let at=parseFloat(row[ci.at]??0)||0,ab=parseFloat(row[ci.ab]??0)||0;
+      if(at>0&&at<1)at*=1e6;if(ab>0&&ab<1)ab*=1e6;
+      flexRaw.push({story,sec,label:String(row[ci.label]??'').trim(),loc:String(row[ci.loc]??'').trim(),at,ab});
+    }
+    flexOK=flexRaw.length>0;
+    drop.innerHTML=`<div class="di">✅</div><div style="color:var(--green);font-weight:600">${fname}</div><div style="font-size:10px;color:var(--g3)">${flexRaw.length} baris · ${[...new Set(flexRaw.map(r=>r.story))].length} lantai</div>`;
+    chkBothLoaded();
+  });
+}
+function parseShear(file){
+  const drop=document.getElementById('drop-shear');drop.innerHTML='<div class="di">⏳</div><div style="color:var(--b1)">Parsing...</div>';
+  parseXLS(file,(headers,rows,fname,err)=>{
+    if(err){drop.innerHTML=`<div class="di">❌</div><div style="color:var(--red)">${err}</div>`;return;}
+    const ci={story:cFind(headers,'story'),sec:cFind(headers,'section','sect'),label:cFind(headers,'label'),loc:cFind(headers,'location','loc'),vu:cFind(headers,'shearforce','shearvu','vu','force'),avs:cFind(headers,'vrebar','avsrebar','avs','reinf','avovesr')};
+    shearRaw=[];
+    for(const row of rows){
+      if(!row||!row.length||!row[ci.story])continue;
+      const story=String(row[ci.story]).trim(),sec=String(row[ci.sec]??'').trim();
+      if(!story||!sec||/^(BB|KB)/i.test(sec))continue;
+      const vu=Math.abs(parseFloat(row[ci.vu]??0)||0);
+      let avs=parseFloat(row[ci.avs]??0)||0;
+      if(avs>0&&avs<0.5)avs*=1e6;else if(avs>0&&avs<50)avs*=1000;
+      shearRaw.push({story,sec,label:String(row[ci.label]??'').trim(),loc:String(row[ci.loc]??'').trim(),vu,avs});
+    }
+    shearOK=shearRaw.length>0;
+    drop.innerHTML=`<div class="di">✅</div><div style="color:var(--green);font-weight:600">${fname}</div><div style="font-size:10px;color:var(--g3)">${shearRaw.length} baris · ${[...new Set(shearRaw.map(r=>r.story))].length} lantai</div>`;
+    chkBothLoaded();
+  });
+}
+function chkBothLoaded(){
+  const st=document.getElementById('up-status');
+  if(flexOK&&shearOK){st.innerHTML='<div class="info ig">✅ Kedua file siap. Jalankan engine.</div>';document.getElementById('eng-wrap').style.display='block';}
+  else st.innerHTML=`<div class="info iy">${flexOK?'✅':'⏳'} Flexural  ${shearOK?'✅':'⏳'} Shear — Upload kedua file untuk melanjutkan.</div>`;
+}
+
+/* ══════════════════════════════════════════════
+   M2: SECTION ORDER (b×h ascending per tipe)
+══════════════════════════════════════════════ */
+function buildSecOrder(){
+  const map={};
+  const allSecs=Object.values(e2kData.sections);
+  // Tambah section dari flexRaw yang belum ada di e2k
+  for(const row of flexRaw){
+    if(!e2kData.sections[row.sec]){
+      const dm=row.sec.match(/(\d+)[xX×](\d+)/);
+      if(dm){const b=+dm[1]*(+dm[1]<100?10:1),h=+dm[2]*(+dm[2]<100?10:1);if(!allSecs.find(s=>s.name===row.sec))allSecs.push({name:row.sec,b,h,type:'BEAM'});}
+    }
+  }
+  // Klasifikasi G/B per section (topologi fallback: nama section)
+  const secType={};
+  for(const s of allSecs){
+    const up=s.name.toUpperCase();
+    secType[s.name]=up.match(/^(G|TG)/)?'G':'B'; // nama-based fallback
+  }
+  // Override dengan topologi dari frameMembers
+  for(const[,fm] of Object.entries(e2kData.frameMembers)){
+    if(fm.sec&&e2kData.sections[fm.sec])
+      secType[fm.sec]=classifyBeam(fm.sec,fm.ptI,fm.ptJ);
+  }
+  const gSecs=allSecs.filter(s=>secType[s.name]==='G').sort((a,b)=>a.b!==b.b?a.b-b.b:a.h-b.h);
+  const bSecs=allSecs.filter(s=>secType[s.name]!=='G').sort((a,b)=>a.b!==b.b?a.b-b.b:a.h-b.h);
+  gSecs.forEach((s,i)=>map[s.name]={...s,isG:true,base:'G'+(i+1)});
+  bSecs.forEach((s,i)=>map[s.name]={...s,isG:false,base:'B'+(i+1)});
+  return map;
+}
+
+/* ══════════════════════════════════════════════
+   M3: LONGITUDINAL ENGINE
+══════════════════════════════════════════════ */
+function nextDiam(db){const i=DALL.indexOf(db);return DALL[Math.min(i+1,DALL.length-1)];}
+function clearMin(db,agg){return Math.max(25,db,4/3*agg);}
+function maxBarsRow(bw,db,cov,swD,agg){
+  const inner=bw-2*(cov+swD+db/2);const s=clearMin(db,agg);
+  if(inner<db)return 0;return Math.max(2,Math.floor((inner+s)/(db+s)));
+}
+function chkSpc(nb,na,db,da,cov,swD,bw,agg){
+  const ctr=cov+swD+db/2;const total=nb+na;if(total<2)return true;
+  const used=nb*db+(na?na*da:0);const gap=(bw-2*ctr-used)/(total-1);
+  return gap>=clearMin(na&&da?da:db,agg);
+}
+function pickRebar(asReq,asMaxV,dmin,dmax,cov,swD,bw,agg){
+  const bases=DALL.filter(d=>d>=dmin&&d<=dmax);
+  let best=null,bestDelta=Infinity;
+  for(const db of [...bases].reverse()){
+    const da=nextDiam(db);
+    const nbMax=maxBarsRow(bw,db,cov,swD,agg);
+    const naMax=maxBarsRow(bw,da,cov,swD,agg);
+    for(let nb=2;nb<=Math.max(nbMax,12);nb++){
+      const ab=nb*DB[db];
+      if(ab>=asReq&&ab<=asMaxV*1.15&&chkSpc(nb,0,db,da,cov,swD,bw,agg)){
+        const delta=Math.abs(ab-asReq);if(delta<bestDelta){best={nb,db,na:0,da,as:ab};bestDelta=delta;}
+      }
+      for(let na=1;na<=Math.max(naMax,8);na++){
+        const as=ab+na*DB[da];if(as>asMaxV*1.15)break;
+        if(as>=asReq&&chkSpc(nb,na,db,da,cov,swD,bw,agg)){
+          const delta=Math.abs(as-asReq);if(delta<bestDelta){best={nb,db,na,da,as};bestDelta=delta;}break;
+        }
+      }
+      if(best&&best.as>=asReq&&bestDelta/Math.max(asReq,1)<0.1)break;
+    }
+    if(best&&best.as>=asReq&&bestDelta/Math.max(asReq,1)<0.1)break;
+  }
+  if(!best){const db=bases[bases.length-1]||dmax;const nb=Math.max(2,Math.ceil(asReq/DB[db]));best={nb,db,na:0,da:nextDiam(db),as:nb*DB[db]};}
+  return best;
+}
+const rLabel=r=>r.na?`${r.nb}D${r.db}+${r.na}D${r.da}`:`${r.nb}D${r.db}`;
+
+/* ══════════════════════════════════════════════
+   M4: SHEAR ENGINE
+══════════════════════════════════════════════ */
+function calcShear(b,h,d,avsTMax,vuMidMax,c){
+  const nK=b>c.leg4?4:2;const phi=0.75;
+  const Vc=0.17*c.lam*Math.sqrt(c.fc)*b*d/1000;
+  const avsMin=(Math.max(0.062*Math.sqrt(c.fc)*b/c.fy_conf,0.35*b/c.fy_conf))*1000;
+  const validD=SW_DALL.filter(d=>d>=c.swDmin&&d<=c.swDmax);
+  let best=null;
+  for(const swD of validD){
+    const Av=DB[swD]*nK;
+    let sT=c.swT;
+    if(avsTMax>0){const needed=Math.ceil(Av/(avsTMax/1000));sT=Math.min(c.swT,Math.max(needed,c.swMin));sT=Math.floor(sT/25)*25||c.swMin;}
+    const Vs=Math.max(vuMidMax/phi-Vc,0);
+    const avsLap=Vs>0?Vs*1000/(c.fy_conf*d/1000):0;
+    const avsFinal=Math.max(avsLap,avsMin);
+    let sL=avsFinal>0?Math.floor(Av/avsFinal*1000):d/2;
+    sL=Math.min(sL,Math.floor(d/2));sL=Math.max(sL,c.swMin);sL=Math.floor(sL/c.swR)*c.swR||c.swMin;
+    const flag=sT>=c.swMin&&sL>=c.swMin;
+    if(!best||sL>best.sL){best={swD,sT,sL,nK,Vc:Vc.toFixed(2),flag};}
+  }
+  if(!best){const swD=validD[0]||8;best={swD,sT:c.swMin,sL:c.swMin,nK,Vc:Vc.toFixed(2),flag:false};}
+  return best;
+}
+
+/* ══════════════════════════════════════════════
+   M2: SUFFIX REGISTRY (kumulatif lintas zona)
+══════════════════════════════════════════════ */
+function barsSimilar(a,b){
+  return a.db===b.db&&a.da===b.da&&Math.abs((a.nb+a.na)-(b.nb+b.na))<=1;
+}
+function assignSuffix(base,topR,botR,registry){
+  if(!registry[base])registry[base]=[];
+  const reg=registry[base];
+  for(const v of reg){
+    if(barsSimilar(v.topR,topR)&&barsSimilar(v.botR,botR)){
+      if((topR.nb+topR.na)>(v.topR.nb+v.topR.na))Object.assign(v.topR,topR);
+      if((botR.nb+botR.na)>(v.botR.nb+v.botR.na))Object.assign(v.botR,botR);
+      return v.gn;
+    }
+  }
+  const idx=reg.length+1;
+  const gn=reg.length===0?base:`${base}-${idx}`;
+  // Retroaktif: varian 1 tanpa suffix → beri suffix -1 saat varian 2 muncul
+  if(reg.length===1&&reg[0].gn===base){
+    reg[0].gn=`${base}-1`;
+    for(const dr of designResult){if(dr.sectionBase===base&&dr.groupName===base)dr.groupName=`${base}-1`;}
+  }
+  reg.push({topR:{...topR},botR:{...botR},gn});
+  return gn;
+}
+
+/* ══════════════════════════════════════════════
+   MAIN ENGINE
+══════════════════════════════════════════════ */
+function runEngine(){
+  cfg=getCfg();
+  const ep=document.getElementById('ep');ep.style.display='block';
+  document.getElementById('btn-run').disabled=true;
+  const setP=(p,msg)=>{document.getElementById('ep-bar').style.width=p+'%';document.getElementById('ep-msg').textContent=msg;};
+  setP(5,'Membangun zona...');
+  setTimeout(()=>{
+    try{
+      const stories=e2kData.stories.length?e2kData.stories:[...new Set(flexRaw.map(r=>r.story))];
+      const zones=buildZones(stories,cfg.zN);
+      const fz=document.getElementById('f-zn');
+      fz.innerHTML='<option value="">Semua</option>'+zones.map((z,i)=>`<option value="Z${i+1}">Z${i+1}: ${z[0]}${z.length>1?'–'+z[z.length-1]:''}</option>`).join('');
+
+      setP(15,'Membangun order section (M2)...');
+      const secOrder=buildSecOrder();
+      const suffixReg={};
+      designResult=[];
+
+      setP(30,'Menghitung demand per zona...');
+
+      for(let zi=0;zi<zones.length;zi++){
+        const zStories=zones[zi],zLabel=`Z${zi+1}`;
+        // Aggregate demand per section dalam zona ini
+        const flexDem={},shearDem={};
+        for(const row of flexRaw){
+          if(!zStories.includes(row.story))continue;
+          if(!flexDem[row.sec])flexDem[row.sec]={atMax:0,abMax:0,members:[]};
+          flexDem[row.sec].atMax=Math.max(flexDem[row.sec].atMax,row.at);
+          flexDem[row.sec].abMax=Math.max(flexDem[row.sec].abMax,row.ab);
+          const key=row.story+'||'+row.label;
+          if(!flexDem[row.sec].members.find(m=>m===key))flexDem[row.sec].members.push(key);
+        }
+        for(const row of shearRaw){
+          if(!zStories.includes(row.story))continue;
+          if(!shearDem[row.sec])shearDem[row.sec]={avsTMax:0,vuMidMax:0};
+          const isT=!row.loc.toLowerCase().match(/mid|span|center/);
+          if(isT)shearDem[row.sec].avsTMax=Math.max(shearDem[row.sec].avsTMax,row.avs);
+          else shearDem[row.sec].vuMidMax=Math.max(shearDem[row.sec].vuMidMax,row.vu);
+        }
+
+        setP(30+Math.floor(50*(zi+1)/zones.length),'Hitung M3+M4 zona '+zLabel+'...');
+
+        for(const[secName,fd] of Object.entries(flexDem)){
+          const so=secOrder[secName];
+          let b=300,h=600,isG=false,base='B1';
+          if(so){b=so.b;h=so.h;isG=so.isG;base=so.base;}
+          else{const dm=secName.match(/(\d+)[xX×](\d+)/);if(dm){b=+dm[1]*(+dm[1]<100?10:1);h=+dm[2]*(+dm[2]<100?10:1);}isG=secName.match(/^(G|TG)/i)?true:false;base=(isG?'G':'B')+'?';}
+
+          const dmin=isG?cfg.g_dmin:cfg.b_dmin,dmax=isG?cfg.g_dmax:cfg.b_dmax;
+          const swD_pick=cfg.swDmin; // untuk d efektif
+          const d=h-cfg.cov-swD_pick-dmax/2;
+          const fy=cfg.fy_long;
+          const asMin=Math.max(0.25*Math.sqrt(cfg.fc)/fy*b*d,1.4/fy*b*d);
+          const asMax=0.025*b*d;
+          const atReq=Math.max(fd.atMax,asMin),abReq=Math.max(fd.abMax,asMin);
+
+          // M3
+          const topR=pickRebar(atReq,asMax,dmin,dmax,cfg.cov,swD_pick,b,cfg.agg);
+          const botR=pickRebar(abReq,asMax,dmin,dmax,cfg.cov,swD_pick,b,cfg.agg);
+          // SNI 18.6.3.1
+          if(topR.as<botR.as/4){const r2=pickRebar(botR.as/4,asMax,dmin,dmax,cfg.cov,swD_pick,b,cfg.agg);if(r2.as>=botR.as/4)Object.assign(topR,r2);}
+
+          // M4
+          const sd=shearDem[secName]||{avsTMax:0,vuMidMax:0};
+          const sw=calcShear(b,h,d,sd.avsTMax,sd.vuMidMax,cfg);
+
+          // M2 suffix
+          const gn=assignSuffix(base,topR,botR,suffixReg);
+          const flag=topR.as<=asMax*1.1&&botR.as<=asMax*1.1&&sw.flag?'PASS':'FAIL';
+
+          // Member labels
+          const memberLabels=fd.members.map(k=>{const[story,label]=k.split('||');return{story,label};});
+
+          designResult.push({
+            groupName:gn,sectionBase:base,secName,b,h,isG,
+            zoneLabel:zLabel,zoneStories:zStories,
+            topLabel:rLabel(topR),botLabel:rLabel(botR),
+            asTop:Math.round(topR.as),asBot:Math.round(botR.as),
+            atReq:Math.round(atReq),abReq:Math.round(abReq),
+            swD:sw.swD,sTump:sw.sT,sLap:sw.sL,nKaki:sw.nK,
+            tumpLabel:`D${sw.swD}-${sw.sT} (${sw.nK}kaki)`,
+            lapLabel:`D${sw.swD}-${sw.sL} (${sw.nK}kaki)`,
+            flag,memberLabels,topR,botR,
+          });
+        }
+      }
+
+      setP(100,'Selesai!');
+      setTimeout(()=>{ep.style.display='none';document.getElementById('res-wrap').style.display='block';renderR();},300);
+    }catch(err){document.getElementById('ep-msg').textContent='Error: '+err.message;console.error(err);}
+  },100);
+}
+
+function renderR(){
+  const tF=document.getElementById('f-tp').value;
+  const zF=document.getElementById('f-zn').value;
+  const sF=document.getElementById('f-sc').value.toLowerCase();
+  const flF=document.getElementById('f-fl').value;
+  const rows=designResult.filter(r=>(!tF||(tF==='G'?r.isG:!r.isG))&&(!zF||r.zoneLabel===zF)&&(!sF||r.secName.toLowerCase().includes(sF)||r.groupName.toLowerCase().includes(sF))&&(!flF||r.flag===flF));
+  const pass=rows.filter(r=>r.flag==='PASS').length;
+  const sm=document.getElementById('res-sum');sm.textContent=`${rows.length}/${designResult.length} group · PASS: ${pass} · FAIL: ${rows.length-pass}`;sm.className=rows.length-pass>0?'info ir':'info ig';
+  document.getElementById('res-stats').innerHTML=
+    `<div class="stbox"><div class="stk">Total Grup</div><div class="stv">${designResult.length}</div></div>
+     <div class="stbox"><div class="stk">Zona</div><div class="stv">${[...new Set(designResult.map(r=>r.zoneLabel))].length}</div></div>
+     <div class="stbox"><div class="stk" style="color:var(--green)">PASS</div><div class="stv" style="color:var(--green)">${designResult.filter(r=>r.flag==='PASS').length}</div></div>
+     <div class="stbox"><div class="stk" style="color:var(--red)">FAIL</div><div class="stv" style="color:var(--red)">${designResult.filter(r=>r.flag==='FAIL').length}</div></div>`;
+  document.getElementById('tb-res').innerHTML=rows.map(r=>`<tr>
+    <td><b style="color:var(--b1)">${r.groupName}</b></td>
+    <td class="mono">${r.secName}</td><td class="mono">${r.b}×${r.h}</td>
+    <td><span class="ztag">${r.zoneLabel}</span></td>
+    <td class="mono">${r.topLabel}</td><td class="mono">${r.botLabel}</td>
+    <td class="mono">${r.tumpLabel}</td><td class="mono">${r.lapLabel}</td>
+    <td class="mono">${r.asTop}</td><td class="mono">${r.asBot}</td>
+    <td><span class="${r.flag==='PASS'?'fp':'ff'}">${r.flag}</span></td>
+  </tr>`).join('');
+}
+
+/* ══════════════════════════════════════════════
+   EXCEL OUTPUT — format seperti template gambar
+   Layout: per zona (sheet per zona), per grup kolom
+   Header: G1-1 (250×700) | L2–Z4 | LEFT END | MIDDLE | RIGHT END | Lz+1 ...
+══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   EXCEL OUTPUT — format rapi + berwarna
+   Layout per zona:
+   - Header project (merged, biru gelap)
+   - Per tipe G / B: baris header grup berdampingan
+     kolom: LEFT END | MIDDLE | RIGHT END | CHECK
+   - Baris: TOP LAYER / BOTTOM LAYER / STIRRUPS / WEB REBAR
+   - Warna: header grup biru, baris bergantian abu
+══════════════════════════════════════════════ */
+function swLabel(swD,s,nKaki){
+  // 2 kaki: D10-100, 4 kaki: 2D10-100
+  return nKaki===2?`D${swD}-${s}`:`2D${swD}-${s}`;
+}
+
+function dlXLSX(){
+  if(!designResult.length){alert('Jalankan engine terlebih dahulu.');return;}
+  const wb=XLSX.utils.book_new();
+  const pnm=document.getElementById('pnm').value||'Project';
+  const zones=[...new Set(designResult.map(r=>r.zoneLabel))];
+
+  // Warna palette
+  const C={
+    hdrDark:'1958A5',   // biru gelap — header project
+    hdrMid:'2E75B6',    // biru medium — header tipe G/B
+    hdrLight:'BDD7EE',  // biru muda — header grup nama
+    hdrSub:'DEEAF1',    // biru sangat muda — subheader L/M/R
+    rowTop:'FFF2CC',    // kuning muda — baris top layer
+    rowBot:'E2EFDA',    // hijau muda — baris bot layer
+    rowSw:'FCE4D6',     // oranye muda — baris stirrup
+    rowWeb:'F2F2F2',    // abu — web rebar
+    pass:'C6EFCE',      // hijau — pass
+    fail:'FFC7CE',      // merah — fail
+    passFont:'375623',
+    failFont:'9C0006',
+    white:'FFFFFF',
+    darkFont:'1F3864',
+  };
+
+  const cell=(v,bold,bg,fc,italic,sz,wrap,halign)=>({
+    v:v??'',t:typeof v==='number'?'n':'s',
+    s:{
+      font:{bold:!!bold,color:{rgb:fc||'000000'},italic:!!italic,sz:sz||10,name:'Calibri'},
+      fill:bg?{patternType:'solid',fgColor:{rgb:bg}}:{patternType:'none'},
+      alignment:{horizontal:halign||'center',vertical:'center',wrapText:!!wrap},
+      border:{top:{style:'thin',color:{rgb:'B8B8B8'}},bottom:{style:'thin',color:{rgb:'B8B8B8'}},left:{style:'thin',color:{rgb:'B8B8B8'}},right:{style:'thin',color:{rgb:'B8B8B8'}}},
+    }
+  });
+
+  const emptyCell=()=>cell('',false,null,null,false,10);
+
+  for(const zl of zones){
+    const zRows=designResult.filter(r=>r.zoneLabel===zl);
+    if(!zRows.length)continue;
+    const gRows=zRows.filter(r=>r.isG).sort((a,b)=>a.groupName.localeCompare(b.groupName));
+    const bRows=zRows.filter(r=>!r.isG).sort((a,b)=>a.groupName.localeCompare(b.groupName));
+
+    // Bangun sheet sebagai array of arrays of cell objects
+    const shRows=[];
+    const merges=[];
+    let R=0; // row index 0-based
+
+    // Row 0: Header project
+    const hdrText=`PENULANGAN BALOK — ${pnm} | Zona: ${zl} | fc'=${cfg.fc}MPa  fy_long=${cfg.fy_long}MPa  fy_conf=${cfg.fy_conf}MPa`;
+    shRows.push([cell(hdrText,true,C.hdrDark,C.white,false,12,false,'left')]);
+    merges.push({s:{r:R,c:0},e:{r:R,c:12}});
+    R++;
+
+    // Row 1: sub-header engineer
+    shRows.push([cell(`Engineer: ${SESSION.name} (${SESSION.role})  |  ${nowStr()}`,false,C.hdrMid,C.white,true,9,false,'left')]);
+    merges.push({s:{r:R,c:0},e:{r:R,c:12}});
+    R++;
+
+    // Spacer
+    shRows.push([emptyCell()]);
+    R++;
+
+    function pushTypeBlock(rows,typeLabel){
+      if(!rows.length)return;
+      const nGrp=rows.length;
+      const totalCols=1+nGrp*4; // 1 label + 4 per grup
+
+      // Row: tipe header (G/B)
+      const typeRow=[cell(typeLabel,true,C.hdrMid,C.white,false,11)];
+      for(let i=0;i<nGrp*4;i++)typeRow.push(cell('',false,C.hdrMid));
+      shRows.push(typeRow);
+      merges.push({s:{r:R,c:0},e:{r:R,c:totalCols-1}});
+      R++;
+
+      // Row: nama grup (merge 4 cols per grup)
+      const grpRow=[cell('TYPE OF\nREINFORCEMENT',true,C.hdrLight,C.darkFont,false,9,true)];
+      rows.forEach(r=>{
+        grpRow.push(cell(`${r.groupName}`,true,C.hdrLight,C.darkFont,false,10));
+        grpRow.push(cell(`${r.b}×${r.h}`,false,C.hdrLight,C.darkFont,true,9));
+        grpRow.push(emptyCell());
+        grpRow.push(emptyCell());
+      });
+      shRows.push(grpRow);
+      rows.forEach((r,i)=>merges.push({s:{r:R,c:1+i*4},e:{r:R,c:1+i*4+1}}));
+      R++;
+
+      // Row: subheader L/M/R/CHECK
+      const subRow=[cell('',false,C.hdrSub)];
+      rows.forEach(()=>{
+        subRow.push(cell('LEFT END',true,C.hdrSub,C.darkFont,false,9));
+        subRow.push(cell('MIDDLE',true,C.hdrSub,C.darkFont,false,9));
+        subRow.push(cell('RIGHT END',true,C.hdrSub,C.darkFont,false,9));
+        subRow.push(cell('CHECK',true,C.hdrSub,C.darkFont,false,9));
+      });
+      shRows.push(subRow);
+      R++;
+
+      // TOP LAYER
+      const topRow=[cell('TOP LAYER',true,C.rowTop,'000000',false,9,false,'left')];
+      rows.forEach(r=>{
+        const midTop=`${r.botR.nb}D${r.botR.db}`; // lapangan = As_bot/4 min
+        topRow.push(cell(r.topLabel,false,C.rowTop,'000000',false,9,false,'center'));
+        topRow.push(cell(midTop,false,C.rowTop,'000000',true,9,false,'center'));
+        topRow.push(cell(r.topLabel,false,C.rowTop,'000000',false,9,false,'center'));
+        const passC=r.flag==='PASS'?C.pass:C.fail;
+        const passF=r.flag==='PASS'?C.passFont:C.failFont;
+        topRow.push(cell(r.flag,true,passC,passF,false,9,false,'center'));
+      });
+      shRows.push(topRow);R++;
+
+      // BOTTOM LAYER
+      const botRow=[cell('BOTTOM LAYER',true,C.rowBot,'000000',false,9,false,'left')];
+      rows.forEach(r=>{
+        botRow.push(cell(r.botLabel,false,C.rowBot,'000000',false,9));
+        botRow.push(cell(r.botLabel,false,C.rowBot,'000000',false,9));
+        botRow.push(cell(r.botLabel,false,C.rowBot,'000000',false,9));
+        botRow.push(cell('',false,C.rowBot));
+      });
+      shRows.push(botRow);R++;
+
+      // STIRRUPS
+      const swRow=[cell('STIRRUPS',true,C.rowSw,'000000',false,9,false,'left')];
+      rows.forEach(r=>{
+        const tL=swLabel(r.swD,r.sTump,r.nKaki);
+        const lL=swLabel(r.swD,r.sLap,r.nKaki);
+        swRow.push(cell(tL,false,C.rowSw,'000000',false,9));
+        swRow.push(cell(lL,false,C.rowSw,'000000',true,9));
+        swRow.push(cell(tL,false,C.rowSw,'000000',false,9));
+        swRow.push(cell('',false,C.rowSw));
+      });
+      shRows.push(swRow);R++;
+
+      // WEB REBAR
+      const webRow=[cell('WEB REBAR',false,C.rowWeb,'666666',true,9,false,'left')];
+      rows.forEach(()=>{
+        webRow.push(cell('2D10',false,C.rowWeb,'666666',false,9));
+        webRow.push(cell('2D10',false,C.rowWeb,'666666',false,9));
+        webRow.push(cell('2D10',false,C.rowWeb,'666666',false,9));
+        webRow.push(cell('',false,C.rowWeb));
+      });
+      shRows.push(webRow);R++;
+
+      // Spacer
+      shRows.push([emptyCell()]);R++;
+    }
+
+    if(gRows.length) pushTypeBlock(gRows,'BALOK INDUK — G');
+    if(bRows.length) pushTypeBlock(bRows,'BALOK ANAK — B');
+
+    // Konversi shRows ke worksheet
+    const ws={};
+    shRows.forEach((row,ri)=>{
+      row.forEach((c,ci)=>{
+        const addr=XLSX.utils.encode_cell({r:ri,c:ci});
+        ws[addr]=c;
+      });
+    });
+    ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:R,c:1+(Math.max(gRows.length,bRows.length))*4}});
+    ws['!merges']=merges;
+
+    // Column widths: col 0 = 22, sisanya bergantian 16/12/16/8
+    const maxGrp=Math.max(gRows.length,bRows.length);
+    ws['!cols']=[{wch:22},...Array(maxGrp*4).fill(null).map((_,i)=>{const m=i%4;return{wch:m===0||m===2?17:m===1?13:8};})];
+    // Row heights
+    ws['!rows']=shRows.map((_,i)=>i<2?{hpt:20}:{hpt:16});
+
+    XLSX.utils.book_append_sheet(wb,ws,zl);
+  }
+
+  // SUMMARY sheet
+  const sumWS={};
+  const sumHdr=['Grup','Section','b×h','Zona','Story Range','Top Tump','Bot Lap','Tump Sengkang','Lap Sengkang','As Top','As Bot','Status'];
+  sumHdr.forEach((h,ci)=>{sumWS[XLSX.utils.encode_cell({r:0,c:ci})]=cell(h,true,C.hdrDark,C.white,false,10);});
+  designResult.forEach((r,ri)=>{
+    const row=[r.groupName,r.secName,`${r.b}×${r.h}`,r.zoneLabel,r.zoneStories.join(','),r.topLabel,r.botLabel,swLabel(r.swD,r.sTump,r.nKaki),swLabel(r.swD,r.sLap,r.nKaki),r.asTop,r.asBot,r.flag];
+    const bg=ri%2===0?null:'F5F5F5';
+    row.forEach((v,ci)=>{
+      const isStatus=ci===11;
+      const sBg=isStatus?(v==='PASS'?C.pass:C.fail):bg;
+      const sF=isStatus?(v==='PASS'?C.passFont:C.failFont):null;
+      sumWS[XLSX.utils.encode_cell({r:ri+1,c:ci})]=cell(v,isStatus,sBg,sF,false,9,false,ci>4?'center':'left');
+    });
+  });
+  sumWS['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:designResult.length,c:11}});
+  sumWS['!cols']=[{wch:10},{wch:14},{wch:8},{wch:6},{wch:16},{wch:18},{wch:16},{wch:16},{wch:16},{wch:8},{wch:8},{wch:8}];
+  XLSX.utils.book_append_sheet(wb,sumWS,'SUMMARY');
+
+  XLSX.writeFile(wb,`SJK_${pnm.replace(/\s+/g,'_')}_Penulangan.xlsx`);
+}
+
+/* ══════════════════════════════════════════════
+   DXF DENAH — per story, posisi koordinat asli
+   Setiap balok = garis dari jointXY[ptI] → jointXY[ptJ]
+   Label suffix di tengah garis (offsetted up)
+   Layer: GRID, BEAM_G, BEAM_B, LABEL_G, LABEL_B, BORDER, TITLE
+══════════════════════════════════════════════ */
+const dT=(x,y,t,h,l,j)=>`  0\nTEXT\n  8\n${l}\n 10\n${x.toFixed(4)}\n 20\n${y.toFixed(4)}\n 30\n0.0\n 40\n${h}\n  1\n${t}\n 72\n${j||1}\n 11\n${x.toFixed(4)}\n 21\n${y.toFixed(4)}\n 31\n0.0\n`;
+const dL=(x1,y1,x2,y2,l)=>`  0\nLINE\n  8\n${l}\n 10\n${x1.toFixed(4)}\n 20\n${y1.toFixed(4)}\n 30\n0.0\n 11\n${x2.toFixed(4)}\n 21\n${y2.toFixed(4)}\n 31\n0.0\n`;
+const dPL=(pts,l,lw)=>{let s=`  0\nPOLYLINE\n  8\n${l}\n 70\n0\n 40\n${lw||0}\n 41\n${lw||0}\n`;for(const[x,y]of pts)s+=`  0\nVERTEX\n  8\n${l}\n 10\n${x.toFixed(4)}\n 20\n${y.toFixed(4)}\n 30\n0.0\n`;s+=`  0\nSEQEND\n`;return s;};
+
+function buildDXFDenah(story){
+  // Kumpulkan frame member yang ada di story ini
+  // Map: memberLabel → {ptI, ptJ, secName}
+  // Dari flexRaw: story+label → secName
+  const memberSecMap={};
+  for(const row of flexRaw){
+    if(row.story===story&&row.label)memberSecMap[row.label]=row.sec;
+  }
+  // Dari frameMembers E2K
+  const storyMembers={};
+  for(const[label,fm] of Object.entries(e2kData.frameMembers)){
+    if(fm.story===story||(memberSecMap[label])){
+      storyMembers[label]={ptI:fm.ptI,ptJ:fm.ptJ,sec:fm.sec||memberSecMap[label]};
+    }
+  }
+  // Jika tidak ada data frameMembers, fallback dari flexRaw
+  if(Object.keys(storyMembers).length===0){
+    for(const row of flexRaw){
+      if(row.story===story&&row.label&&!storyMembers[row.label])
+        storyMembers[row.label]={ptI:null,ptJ:null,sec:row.sec,label:row.label};
+    }
+  }
+
+  // Map memberLabel → groupName dari designResult zona yang include story ini
+  const memberGroupMap={};
+  for(const dr of designResult){
+    if(!dr.zoneStories.includes(story))continue;
+    for(const ml of (dr.memberLabels||[])){
+      if(ml.story===story)memberGroupMap[ml.label]=dr;
+    }
+  }
+
+  // Kumpulkan koordinat joint, hitung bounding box, scale ke DXF (meter→mm *1000 atau *1)
+  const jXY=e2kData.jointXY;
+  const hasCoords=Object.keys(jXY).length>0;
+
+  let body='';
+  const SCALE=1000; // m → mm
+
+  if(hasCoords){
+    // Temukan bounding box
+    const xs=Object.values(jXY).map(j=>j.x*SCALE);
+    const ys=Object.values(jXY).map(j=>j.y*SCALE);
+    const minX=Math.min(...xs),maxX=Math.max(...xs);
+    const minY=Math.min(...ys),maxY=Math.max(...ys);
+    const pad=2000; // 2m padding
+
+    // Border
+    body+=dL(minX-pad,minY-pad,maxX+pad,minY-pad,'BORDER');
+    body+=dL(maxX+pad,minY-pad,maxX+pad,maxY+pad,'BORDER');
+    body+=dL(maxX+pad,maxY+pad,minX-pad,maxY+pad,'BORDER');
+    body+=dL(minX-pad,maxY+pad,minX-pad,minY-pad,'BORDER');
+
+    // Title
+    body+=dT((minX+maxX)/2,maxY+pad*0.6,`DENAH PENULANGAN — ${story}`,300,'TITLE',1);
+    body+=dT((minX+maxX)/2,maxY+pad*0.3,`Zona: ${designResult.find(r=>r.zoneStories.includes(story))?.zoneLabel||''}  |  Project: ${document.getElementById('pnm').value||'-'}`,150,'TITLE',1);
+
+    // Gambar setiap member
+    for(const[label,fm] of Object.entries(storyMembers)){
+      const pI=jXY[fm.ptI],pJ=jXY[fm.ptJ];
+      if(!pI||!pJ)continue;
+
+      const x1=pI.x*SCALE,y1=pI.y*SCALE;
+      const x2=pJ.x*SCALE,y2=pJ.y*SCALE;
+      const mx=(x1+x2)/2,my=(y1+y2)/2;
+
+      const dr=memberGroupMap[label];
+      const isG=dr?dr.isG:(fm.sec?.toUpperCase().match(/^(G|TG)/)?true:false);
+      const layer=isG?'BEAM_G':'BEAM_B';
+      const lLabel=isG?'LABEL_G':'LABEL_B';
+
+      // Garis balok (lebar representatif dari dimensi section)
+      const sec=e2kData.sections[fm.sec];
+      const bw=sec?sec.b/2:150; // half-width mm
+
+      // Hitung arah tegak lurus
+      const dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy)||1;
+      const nx=-dy/len*bw,ny=dx/len*bw;
+
+      // Gambar sebagai polyline 4 titik (rectangle balok)
+      body+=dPL([[x1+nx,y1+ny],[x2+nx,y2+ny],[x2-nx,y2-ny],[x1-nx,y1-ny],[x1+nx,y1+ny]],layer,0);
+
+      // Label suffix di tengah + offset naik
+      const gn=dr?dr.groupName:label;
+      const offsetY=ny>=0?bw+200:-(bw+200);
+      const offsetX=nx>=0?bw+100:-(bw+100);
+      body+=dT(mx+offsetX*0.3,my+offsetY*0.3,gn,200,lLabel,1);
+    }
+  } else {
+    // Fallback: tidak ada koordinat — buat layout grid sederhana
+    body+=dT(0,2000,`DENAH — ${story} (koordinat joint tidak tersedia di E2K)`,250,'TITLE',1);
+    const entries=Object.entries(memberGroupMap);
+    const cols=6;
+    entries.forEach(([label,dr],idx)=>{
+      const col=idx%cols,row=Math.floor(idx/cols);
+      const ox=col*3000,oy=-row*1500;
+      const bw=dr.b/2,bh=100;
+      body+=dL(ox,oy-bh,ox+dr.b,oy-bh,dr.isG?'BEAM_G':'BEAM_B');
+      body+=dL(ox,oy+bh,ox+dr.b,oy+bh,dr.isG?'BEAM_G':'BEAM_B');
+      body+=dL(ox,oy-bh,ox,oy+bh,dr.isG?'BEAM_G':'BEAM_B');
+      body+=dL(ox+dr.b,oy-bh,ox+dr.b,oy+bh,dr.isG?'BEAM_G':'BEAM_B');
+      body+=dT(ox+dr.b/2,oy+bh+200,dr.groupName,180,dr.isG?'LABEL_G':'LABEL_B',1);
+      body+=dT(ox+dr.b/2,oy-bh-300,label,120,'TEXT',1);
+    });
+  }
+
+  // DXF dengan TABLES (layer definitions + line types)
+  const dxf=`  0\nSECTION\n  2\nHEADER\n  9\n$ACADVER\n  1\nAC1009\n  9\n$INSUNITS\n 70\n4\n  0\nENDSEC\n`+
+    `  0\nSECTION\n  2\nTABLES\n`+
+    `  0\nTABLE\n  2\nLAYER\n 70\n8\n`+
+    layerDef('BEAM_G','2')+layerDef('BEAM_B','4')+
+    layerDef('LABEL_G','1')+layerDef('LABEL_B','3')+
+    layerDef('BORDER','8')+layerDef('TITLE','7')+
+    layerDef('GRID','9')+layerDef('TEXT','7')+
+    `  0\nENDTAB\n  0\nENDSEC\n`+
+    `  0\nSECTION\n  2\nENTITIES\n`+body+
+    `  0\nENDSEC\n  0\nEOF\n`;
+  return dxf;
+}
+
+function layerDef(name,color){
+  return`  0\nLAYER\n  2\n${name}\n 70\n0\n 62\n${color}\n  6\nCONTINUOUS\n`;
+}
+
+function dlDXF(){
+  if(!designResult.length){alert('Jalankan engine terlebih dahulu.');return;}
+  const stories=e2kData.stories.length
+    ?e2kData.stories
+    :[...new Set(flexRaw.map(r=>r.story))];
+  const pnm=(document.getElementById('pnm').value||'Project').replace(/\s+/g,'_');
+  let count=0;
+  for(const story of stories){
+    const hasData=flexRaw.some(r=>r.story===story);
+    if(!hasData)continue;
+    const dxf=buildDXFDenah(story);
+    dlText(dxf,`SJK_${pnm}_DENAH_${story}.dxf`);
+    count++;
+  }
+  alert(`✅ ${count} file DXF denah per story berhasil di-download.`);
+}
+
+/* ══════════════════════════════════════════════
+   E2K OUTPUT (suffix-aware)
+══════════════════════════════════════════════ */
+function escRe(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function stripRebar(line){return line.replace(/\s+REBAR3I\s+[\d.eE+\-]+/gi,'').replace(/\s+REBAR3J\s+[\d.eE+\-]+/gi,'').replace(/\s+REBAR2\s+[\d.eE+\-]+/gi,'').replace(/\s+STIRRUPSPACETOP\s+[\d.eE+\-]+/gi,'').replace(/\s+STIRRUPSPACE\s+[\d.eE+\-]+/gi,'');}
+function buildVarMap(){
+  const m={};
+  for(const r of designResult){
+    if(!m[r.secName])m[r.secName]=[];
+    if(!m[r.secName].find(v=>v.groupName===r.groupName))m[r.secName].push(r);
+  }
+  for(const k of Object.keys(m))m[k].sort((a,b)=>a.groupName.localeCompare(b.groupName));
+  return m;
+}
+function buildMissingAssigns(varMap){
+  const existing=new Set();
+  for(const line of e2kRaw.split(/\r?\n/)){const t=line.trim();if(/^FRAMESECASSIGN\s+/i.test(t)){const m=t.match(/FRAMESECASSIGN\s+"([^"]+)"\s+"([^"]+)"/i);if(m)existing.add(m[1]+'||'+m[2]);}}
+  const out=[];
+  for(const r of designResult){
+    if(!r.memberLabels)continue;
+    const vm=varMap[r.secName];const newNm=vm?.length===1?r.sectionBase:r.groupName;
+    for(const ml of r.memberLabels){const key=ml.story+'||'+ml.label;if(!existing.has(key)){out.push(`FRAMESECASSIGN "${ml.story}" "${ml.label}" SECTION "${newNm}"`);existing.add(key);}}
+  }
+  return out;
+}
+function buildE2kCore(incShear){
+  if(!e2kRaw)return'$ No E2K source\n';
+  const vm=buildVarMap();const lines=e2kRaw.split(/\r?\n/);const out=[];
+  for(const raw of lines){
+    const t=raw.trim();
+    if(/^FRAMESECTION\s+"([^"]+)"/i.test(t)){
+      const nm=t.match(/FRAMESECTION\s+"([^"]+)"/i)?.[1];const vars=vm[nm];
+      if(vars?.length){vars.forEach(v=>{const nn=vars.length===1?v.sectionBase:v.groupName;let line=stripRebar(raw).replace(`"${nm}"`,`"${nn}"`);const at=(v.asTop/1e6).toFixed(8),ab=(v.asBot/1e6).toFixed(8);line+=` REBAR3I ${at} REBAR3J ${at} REBAR2 ${ab}`;if(incShear){const sT=(v.sTump/1000).toFixed(4),sL=(v.sLap/1000).toFixed(4);line+=` STIRRUPSPACETOP ${sT} STIRRUPSPACE ${sL}`;}out.push(`$ [${nn}] Long:${v.topLabel}/${v.botLabel}${incShear?' Shear:'+v.tumpLabel+'/'+v.lapLabel:''}`);out.push(line);});continue;}
+    }
+    if(/^CONCRETESECTION\s+"([^"]+)"/i.test(t)){
+      const nm=t.match(/CONCRETESECTION\s+"([^"]+)"/i)?.[1];const vars=vm[nm];
+      if(vars?.length){vars.forEach((v,i)=>{const nn=vars.length===1?v.sectionBase:v.groupName;if(i===0)out.push('$ SJKv2 CONCRETESECTION suffix');out.push(raw.replace(`"${nm}"`,`"${nn}"`));});continue;}
+    }
+    if(/^FRAMESECASSIGN\s+/i.test(t)){
+      const sm=t.match(/FRAMESECASSIGN\s+"([^"]+)"\s+"([^"]+)"/i);const origSec=t.match(/SECTION\s+"([^"]+)"/i)?.[1];
+      if(sm&&origSec){const story=sm[1],label=sm[2];const match=designResult.find(r=>r.memberLabels?.find(m=>m.story===story&&m.label===label)&&r.secName===origSec);if(match){const nn=vm[origSec]?.length===1?match.sectionBase:match.groupName;out.push(raw.replace(`"${origSec}"`,`"${nn}"`));continue;}}
+    }
+    out.push(raw);
+  }
+  const missing=buildMissingAssigns(vm);
+  if(missing.length){out.push('\n$ ── SJKv2 FRAMESECASSIGN suffix-aware ──');out.push(...missing);}
+  return out.join('\r\n');
+}
+function dlE2Kv1(){if(!designResult.length){alert('Jalankan engine terlebih dahulu.');return;}const pnm=(document.getElementById('pnm').value||'P').replace(/\s+/g,'_');dlText(`$ SJK-ETABSRebarPro v2.2 — E2K LONGITUDINAL\n$ ${nowStr()}\n$ Project: ${document.getElementById('pnm').value} | Engineer: ${SESSION.name}\n\n`+buildE2kCore(false),`SJK_${pnm}_E2K_v1.e2k`);}
+function dlE2KFinal(){if(!designResult.length){alert('Jalankan engine terlebih dahulu.');return;}const pnm=(document.getElementById('pnm').value||'P').replace(/\s+/g,'_');dlText(`$ SJK-ETABSRebarPro v2.2 — E2K FINAL\n$ ${nowStr()}\n$ Project: ${document.getElementById('pnm').value} | Engineer: ${SESSION.name}\n\n`+buildE2kCore(true),`SJK_${pnm}_E2K_Final.e2k`);}
+function dlReport(){
+  if(!designResult.length){alert('Jalankan engine terlebih dahulu.');return;}
+  const pnm=document.getElementById('pnm').value||'Project';
+  let t=`LAPORAN DESAIN TULANGAN — SJK-ETABSRebarPro v2.2\nProject: ${pnm}\n${nowStr()}\nfc'=${cfg.fc}MPa | fy_long=${cfg.fy_long}MPa | fy_conf=${cfg.fy_conf}MPa\n\n`;
+  const zones=[...new Set(designResult.map(r=>r.zoneLabel))];
+  for(const z of zones){t+=`\n══ ${z} ══\nGrup\tSection\tb×h\tTop Tump\tBot Lap\tTump SW\tLap SW\tStatus\n`;designResult.filter(r=>r.zoneLabel===z).forEach(r=>t+=`${r.groupName}\t${r.secName}\t${r.b}×${r.h}\t${r.topLabel}\t${r.botLabel}\t${r.tumpLabel}\t${r.lapLabel}\t${r.flag}\n`);}
+  const fails=designResult.filter(r=>r.flag==='FAIL');t+=fails.length?`\n⚠️ ${fails.length} FAIL: ${fails.map(r=>r.groupName+'['+r.secName+']').join(', ')}\n`:'✓ Semua PASS\n';
+  dlText(t,`SJK_${pnm.replace(/\s+/g,'_')}_Laporan.txt`);
+}
+function goOutput(){
+  unlock('output');showTab('output');
+  const pnm=document.getElementById('pnm').value||'Project';
+  document.getElementById('sv-name').textContent=`SJKRebarPro_${pnm.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}`;
+  document.getElementById('out-files').innerHTML=[
+    {icon:'📊',name:'Excel Penulangan Balok (.xlsx)',fn:'dlXLSX'},
+    {icon:'📐',name:'DXF Denah per Story (posisi koordinat asli)',fn:'dlDXF'},
+    {icon:'📄',name:'Laporan Ringkas (.txt)',fn:'dlReport'},
+    {icon:'📁',name:'E2K v1 — Longitudinal',fn:'dlE2Kv1'},
+    {icon:'📁',name:'E2K Final — Long + Shear',fn:'dlE2KFinal'},
+  ].map(f=>`<div class="frow"><span style="font-size:18px">${f.icon}</span><div style="flex:1;font-size:12px">${f.name}</div><button class="bp" style="padding:4px 10px;font-size:11px" onclick="${f.fn}()">⬇️</button></div>`).join('');
+}
+function dlAll(){dlXLSX();setTimeout(dlDXF,400);setTimeout(dlReport,800);setTimeout(dlE2Kv1,1200);setTimeout(dlE2KFinal,1600);}
+const dlText=(c,f)=>{const a=document.createElement('a');a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(c);a.download=f;a.click();};
+const saveProj=()=>{document.getElementById('btn-save').textContent='✓ Tersimpan';document.getElementById('btn-save').className='bg';document.getElementById('sv-ok').style.display='block';document.getElementById('sv-ok').textContent='Project berhasil disimpan.';};
+
+/* ══ SNI ══ */
+const SNIDATA={s1:{code:'SNI 2847:2019',sub:'Persyaratan Beton Struktural',color:'#1958A5',items:[{ps:'9.6.1.2',t:'As minimum balok',f:'As_min = max(0.25√fc/fy·bw·d, 1.4/fy·bw·d)'},{ps:'9.3.3.1',t:'As maks SRPMK',f:'As_max = 0.025·bw·d'},{ps:'18.6.3.1',t:'As min tumpuan SRPMK',f:'As_tump ≥ max(As_min, As_lap/4)'},{ps:'22.5.5.1',t:'Vc lapangan',f:'Vc=0.17λ√fc·bw·d | Vc=0 tumpuan SRPMK'},{ps:'22.5.8.5',t:'Vs sengkang',f:'Vs=Av·fy·d/s | φ=0.75'},{ps:'25.2.1',t:'Jarak bersih',f:'s≥max(25,db,4/3·agg)'}]},s2:{code:'SNI 1726:2019',sub:'Ketahanan Gempa',color:'#B45309',items:[{ps:'7.3',t:'KDS',f:'KDS A–F dari SDS, SD1'},{ps:'7.5.1',t:'SRPMK',f:'R=8 | Ω₀=3 | Cd=5.5'}]},s3:{code:'SNI 1727:2020',sub:'Beban Desain Minimum',color:'#166534',items:[{ps:'4.3.2',t:'Beban hidup',f:'Kantor=2.40 | Apartemen=1.92 kN/m²'},{ps:'2.3.1',t:'Kombinasi LRFD',f:'1.4D | 1.2D+1.6L | 1.2D+E+L'}]}};
+let curSNI='s1';
+function setSNI(id){curSNI=id;const d=SNIDATA[id];['s1','s2','s3'].forEach((k,i)=>{const b=document.getElementById('sb'+(i+1));const c=SNIDATA[k].color;b.style.borderColor=k===id?c:'var(--b4)';b.style.background=k===id?c+'15':'#fff';b.style.color=k===id?c:'var(--g3)';});document.getElementById('sni-code').textContent=d.code;document.getElementById('sni-code').style.color=d.color;document.getElementById('sni-hdr').style.background=d.color+'10';document.getElementById('sni-hdr').style.borderColor=d.color+'30';document.getElementById('sni-sub').textContent=d.sub;document.getElementById('sni-q').value='';fSNI();}
+function fSNI(){renderSNI(document.getElementById('sni-q').value);}
+function renderSNI(q){const d=SNIDATA[curSNI];const items=d.items.filter(p=>!q||p.ps.includes(q)||p.t.toLowerCase().includes(q.toLowerCase()));document.getElementById('sni-list').innerHTML=items.map(p=>`<div style="background:#fff;border:1px solid var(--b4);border-radius:9px;padding:12px 14px;margin-bottom:8px;border-left:3px solid ${d.color}"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-family:monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:5px;background:${d.color}15;color:${d.color}">Ps. ${p.ps}</span><span style="font-size:12px;font-weight:600">${p.t}</span></div><div style="font-family:monospace;font-size:11px;color:var(--b1);background:var(--b5);padding:6px 10px;border-radius:5px">${p.f}</div></div>`).join('')||'<div style="text-align:center;color:var(--g4);padding:24px">Tidak ditemukan.</div>';}
+renderSNI('');updZ(1);
+</script>
+</body>
+</html>
